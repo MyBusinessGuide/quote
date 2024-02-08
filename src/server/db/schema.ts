@@ -1,12 +1,17 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  boolean,
+  foreignKey,
   index,
   integer,
+  pgEnum,
   pgTableCreator,
   primaryKey,
   serial,
+  smallint,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
@@ -19,24 +24,107 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
 
-export const posts = createTable(
-  "post",
+export const vertical = createTable("vertical", {
+  id: serial("id").primaryKey(),
+  label: varchar("label", { length: 256 }).notNull(),
+  slug: text("slug").unique().notNull(),
+});
+
+export const companyType = createTable("company_type", {
+  id: serial("id").primaryKey(),
+  label: varchar("label", { length: 256 }).notNull().unique(),
+});
+
+export const industry = createTable("industry", {
+  id: serial("id").primaryKey(),
+  label: varchar("label", { length: 256 }).notNull().unique(),
+});
+
+export const leadJourneyPage = pgEnum("lead_journey_page", [
+  "VERTICAL_AMOUNT",
+  "COMPANY_NAME",
+  "ANNUAL_TURNOVER",
+  "INDUSTRY",
+  "TENURE",
+  "COMPANY_API",
+  "SUMMARY",
+]);
+
+export const annualTurnoverGBP = createTable("annual_turnover_gbp", {
+  id: serial("id").primaryKey(),
+  minGBP: integer("min_gbp"),
+  maxGBP: integer("max_gbp"),
+  label: varchar("label", { length: 256 }).notNull(),
+});
+
+export const tenure_yrs = createTable("tenure_yrs", {
+  id: serial("id").primaryKey(),
+  minYrs: integer("min_yrs"),
+  maxYrs: integer("max_yrs"),
+  label: varchar("label", { length: 256 }).notNull(),
+});
+
+export const leadJourney = createTable(
+  "lead_journey",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
+    verticalId: integer("vertical_id")
+      .references(() => vertical.id)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    companyTypeId: integer("company_type_id")
+      .references(() => companyType.id)
+      .notNull(),
+    firstLeadJourneyStepId: integer("first_lead_journey_step_id")
+      .notNull()
+      .references(() => leadJourneyStep.id),
   },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
+  (t) => ({
+    unq: unique().on(t.companyTypeId, t.verticalId),
+  }),
 );
+
+export const leadJourneyStep = createTable(
+  "lead_journey_step",
+  {
+    id: serial("id").primaryKey(),
+    leadJourneyPage: leadJourneyPage("lead_journey_page").notNull(),
+    slug: text("slug").unique().notNull(),
+    nextJourneyStepId: integer("next_journey_step"),
+  },
+  (t) => ({
+    nextJourneyStepReference: foreignKey({
+      columns: [t.nextJourneyStepId],
+      foreignColumns: [t.id],
+    }),
+  }),
+);
+
+export const lead = createTable("lead", {
+  id: serial("id").primaryKey(),
+  fullName: varchar("full_name", { length: 255 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  companyTypeId: integer("company_type_id").references(() => companyType.id),
+  companyName: text("company_name"),
+  annualTurnoverGBPId: integer("annual_turnover_gbp_id").references(
+    () => annualTurnoverGBP.id,
+  ),
+  industryId: integer("industry_id").references(() => industry.id),
+  tenureYrsId: integer("tenure_yrs_id").references(() => tenure_yrs.id),
+  submitted: boolean("submitted").default(false),
+});
+
+export const verticalAmountGBP = createTable("vertical_amount_gbp", {
+  id: serial("id").primaryKey(),
+  verticalId: integer("vertical_id")
+    .references(() => vertical.id)
+    .notNull(),
+  leadId: integer("lead_id")
+    .references(() => lead.id)
+    .notNull(),
+  amountGBP: integer("amount_gbp").notNull(),
+});
+
+// AUTH
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -76,7 +164,7 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
     userIdIdx: index("account_userId_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -96,7 +184,7 @@ export const sessions = createTable(
   },
   (session) => ({
     userIdIdx: index("session_userId_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -112,5 +200,5 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );
