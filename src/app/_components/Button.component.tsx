@@ -7,7 +7,6 @@ const buttonVariant = cva("rounded-3xl py-3 px-10 cursor-pointer", {
   variants: {
     variant: {
       primary: "bg-primary text-white",
-      secondary: "bg-primary-50 text-primary border-1 border-primary",
     },
     fullWidth: {
       true: "w-full",

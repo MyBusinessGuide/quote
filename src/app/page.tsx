@@ -1,21 +1,29 @@
-import Button from "./_components/Button.component";
+"use client";
 
-export default async function Home() {
+import { useEffect, useState } from "react";
+import Button from "./_components/Button.component";
+import RadioGroup, {
+  RadioGroupProps,
+} from "./_components/RadioGroup/RadioGroup.component";
+
+const items: RadioGroupProps["items"] = [
+  { label: "Sole Trader", value: "sole-trader" },
+  { label: "Limited Company", value: "limited-company" },
+  { label: "Partnership", value: "partnership" },
+];
+
+export default function Home() {
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    console.log(value);
+  }, [value]);
+
   return (
     <main className="flex flex-1 flex-col items-center justify-evenly p-4">
-      <ul className="flex w-full flex-col gap-4">
-        <Button variant="secondary" fullWidth>
-          Sole Trader
-        </Button>
-        <Button variant="secondary" fullWidth>
-          Limited Company
-        </Button>
-        <Button variant="secondary" fullWidth>
-          Partnership
-        </Button>
-      </ul>
+      <RadioGroup items={items} value={value} onValueChange={setValue} />
 
-      <Button variant={"primary"} fullWidth loading>
+      <Button variant={"primary"} fullWidth disabled={!value}>
         Next
       </Button>
     </main>
