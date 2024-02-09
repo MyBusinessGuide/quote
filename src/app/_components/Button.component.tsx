@@ -48,7 +48,7 @@ export default function Button({
         buttonVariant({
           variant,
           fullWidth,
-          disabled: disabled || loading,
+          disabled: disabled ?? loading,
           loading,
         }),
         className,
