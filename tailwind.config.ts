@@ -28,6 +28,7 @@ export default {
           "900": "#1d372f",
           "950": "#0f1f1b",
         },
+        "primary-disabled": "#7f8e8a",
       },
       borderWidth: {
         1: "1px",

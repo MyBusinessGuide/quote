@@ -1,6 +1,7 @@
 import { ComponentProps } from "react";
 import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "../_utils/cn";
+import { Loader2 } from "lucide-react";
 
 const buttonVariant = cva("rounded-3xl py-3 px-10 cursor-pointer", {
   variants: {
@@ -12,6 +13,14 @@ const buttonVariant = cva("rounded-3xl py-3 px-10 cursor-pointer", {
       true: "w-full",
       false: "",
     },
+    disabled: {
+      true: "bg-primary-disabled cursor-not-allowed",
+      false: "",
+    },
+    loading: {
+      true: "flex justify-center items-center",
+      false: "",
+    },
   },
   defaultVariants: {
     variant: "primary",
@@ -20,21 +29,34 @@ const buttonVariant = cva("rounded-3xl py-3 px-10 cursor-pointer", {
 });
 
 type ButtonVariant = VariantProps<typeof buttonVariant>;
-type ButtonProps = {} & ComponentProps<"button"> & ButtonVariant;
+type ButtonProps = {
+  loading?: boolean;
+} & ComponentProps<"button"> &
+  ButtonVariant;
 
 export default function Button({
   children,
   variant,
   fullWidth,
   className,
+  disabled,
+  loading,
   ...rest
 }: ButtonProps) {
   return (
     <button
-      className={cn(buttonVariant({ variant, fullWidth }), className)}
+      className={cn(
+        buttonVariant({
+          variant,
+          fullWidth,
+          disabled: disabled || loading,
+          loading,
+        }),
+        className,
+      )}
       {...rest}
     >
-      {children}
+      {loading ? <Loader2 className="animate-spin" /> : children}
     </button>
   );
 }
