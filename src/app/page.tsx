@@ -16,13 +16,8 @@ const items: RadioGroupProps["items"] = [
 export default function Home() {
   const [value, setValue] = useState("");
 
-  useEffect(() => {
-    console.log(value);
-  }, [value]);
-
   return (
-    <main className="flex flex-1 flex-col items-center justify-evenly p-4">
-      <Input id="test" label="Company Name" required placeholder="Jane Smith" />
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-evenly p-4">
       <div className="text-primary-700 flex w-full flex-col gap-8">
         <p className="text-center">Whats is your company type?</p>
         <RadioGroup items={items} value={value} onValueChange={setValue} />
