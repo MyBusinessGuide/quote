@@ -5,6 +5,7 @@ import Button from "./_components/Button.component";
 import RadioGroup, {
   RadioGroupProps,
 } from "./_components/RadioGroup/RadioGroup.component";
+import Input from "./_components/Input.component";
 
 const items: RadioGroupProps["items"] = [
   { label: "Sole Trader", value: "sole-trader" },
@@ -21,7 +22,11 @@ export default function Home() {
 
   return (
     <main className="flex flex-1 flex-col items-center justify-evenly p-4">
-      <RadioGroup items={items} value={value} onValueChange={setValue} />
+      <Input id="test" label="Company Name" required placeholder="Jane Smith" />
+      <div className="text-primary-700 flex w-full flex-col gap-8">
+        <p className="text-center">Whats is your company type?</p>
+        <RadioGroup items={items} value={value} onValueChange={setValue} />
+      </div>
 
       <Button variant={"primary"} fullWidth disabled={!value}>
         Next
