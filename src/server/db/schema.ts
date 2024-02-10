@@ -40,7 +40,7 @@ export const industry = createTable("industry", {
   label: varchar("label", { length: 256 }).notNull().unique(),
 });
 
-export const leadJourneyPage = pgEnum("lead_journey_page", [
+const _leadJourneyPage = [
   "VERTICAL_AMOUNT",
   "COMPANY_NAME",
   "ANNUAL_TURNOVER",
@@ -48,7 +48,9 @@ export const leadJourneyPage = pgEnum("lead_journey_page", [
   "TENURE",
   "COMPANY_API",
   "SUMMARY",
-]);
+] as const;
+export type LeadJourneyPage = (typeof _leadJourneyPage)[number];
+export const leadJourneyPage = pgEnum("lead_journey_page", _leadJourneyPage);
 
 export const annualTurnoverGBP = createTable("annual_turnover_gbp", {
   id: serial("id").primaryKey(),
