@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Industry from "~/app/_components/JourneyPages/Industry.page";
 import Turnover from "~/app/_components/JourneyPages/Turnover.page";
 import { LeadJourneyPage } from "~/server/db/schema";
 import { api } from "~/trpc/server";
@@ -22,7 +23,7 @@ export default async function LeadJourneyStep({
       VERTICAL_AMOUNT: "Vertical Amount",
       COMPANY_NAME: "Company Name",
       ANNUAL_TURNOVER: <Turnover nextStepSlug={data.nextStepSlug} />,
-      INDUSTRY: "Industry",
+      INDUSTRY: <Industry nextStepSlug={data.nextStepSlug} />,
       TENURE: "Tenure",
       COMPANY_API: "Company API",
       SUMMARY: "Summary",
