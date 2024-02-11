@@ -26,11 +26,11 @@ const radioButtonVariant = cva(
 
 export type TRadioButton = {
   label: string;
-  value: string;
+  value: string | number;
 };
 
 type RadioButtonProps = TRadioButton &
-  ComponentProps<typeof RadioGroup.Item> &
+  Omit<ComponentProps<typeof RadioGroup.Item>, "value"> &
   VariantProps<typeof radioButtonVariant>;
 
 export default function RadioButton({
@@ -43,8 +43,8 @@ export default function RadioButton({
 }: RadioButtonProps) {
   return (
     <RadioGroup.Item
-      id={value}
-      value={value}
+      id={value.toString()}
+      value={value.toString()}
       {...rest}
       className={cn(radioButtonVariant({ selected, fullWidth }), className)}
     >

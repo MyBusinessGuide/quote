@@ -2,10 +2,11 @@
 import * as RadioGroupRadix from "@radix-ui/react-radio-group";
 import RadioButton, { TRadioButton } from "./RadioButton.component";
 
+export type RadioGroupItem = TRadioButton;
 export type RadioGroupProps = {
-  items: TRadioButton[];
+  items: RadioGroupItem[];
   onValueChange: (value: string) => void;
-  value?: string;
+  value?: string | number;
 };
 
 export default function RadioGroup({
@@ -16,15 +17,16 @@ export default function RadioGroup({
   return (
     <RadioGroupRadix.Root
       onValueChange={onValueChange}
-      value={value}
+      value={value?.toString()}
       className="flex w-full flex-col gap-4"
     >
       {items.map((item) => (
         <RadioButton
           key={item.value}
-          {...item}
+          value={item.value}
+          label={item.label}
           fullWidth
-          selected={value === item.value}
+          selected={value == item.value}
         />
       ))}
     </RadioGroupRadix.Root>
