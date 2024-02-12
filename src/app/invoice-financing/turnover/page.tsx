@@ -1,26 +1,10 @@
 "use client";
 import { useState } from "react";
-import RadioGroup, { RadioGroupItem } from "../RadioGroup/RadioGroup.component";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 
-const items: RadioGroupItem[] = [
-  {
-    label: "Less than £85,000",
-    value: "less-than-85000",
-  },
-  { label: "£85,000 - £150,000", value: "85000-150000" },
-  { label: "£150,000 - £250,000", value: "150000-250000" },
-  { label: "£250,000 - £500,000", value: "250000-500000" },
-  { label: "£500,000 - £1,000,000", value: "500000-1000000" },
-  { label: "More than £1,000,000", value: "more-than-1000000" },
-];
-
-type TurnoverProps = {
-  nextStepSlug: string | null;
-};
-
-export default function Turnover({ nextStepSlug }: TurnoverProps) {
+export default function Turnover() {
   const [selectedValue, setSelectedValue] = useState<string | undefined>();
   const router = useRouter();
   const { data, error, isLoading } = api.annualTurnoverGBP.getAll.useQuery();
@@ -29,8 +13,6 @@ export default function Turnover({ nextStepSlug }: TurnoverProps) {
     setSelectedValue(value);
 
     // set value in zustand
-    if (!nextStepSlug) return;
-    setTimeout(() => router.push(nextStepSlug), 0);
   };
 
   const items = data?.map((item) => ({
@@ -49,11 +31,6 @@ export default function Turnover({ nextStepSlug }: TurnoverProps) {
           onValueChange={onValueChange}
           value={selectedValue}
         />
-        {/* <Link href={`${nextStepSlug}`} className="w-full">
-        <Button variant={"primary"} fullWidth>
-          Next
-        </Button>
-      </Link> */}
       </div>
     );
 

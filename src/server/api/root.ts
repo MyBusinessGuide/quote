@@ -1,7 +1,7 @@
-import { leadJourneyStepRouter } from "~/server/api/routers/leadJourneyStep";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { annualTurnoverGBPRouter } from "./routers/annualTurnoverGBP";
 import { industryRouter } from "./routers/industry";
+import { tenureRouter } from "./routers/tenure";
 
 /**
  * This is the primary router for your server.
@@ -9,9 +9,9 @@ import { industryRouter } from "./routers/industry";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  leadJourneyStep: leadJourneyStepRouter,
   annualTurnoverGBP: annualTurnoverGBPRouter,
   industry: industryRouter,
+  tenure: tenureRouter,
 });
 
 // export type definition of API

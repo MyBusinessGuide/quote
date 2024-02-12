@@ -41,13 +41,12 @@ export const industry = createTable("industry", {
 });
 
 const _leadJourneyPage = [
-  "VERTICAL_AMOUNT",
   "COMPANY_NAME",
   "ANNUAL_TURNOVER",
   "INDUSTRY",
   "TENURE",
   "COMPANY_API",
-  "SUMMARY",
+  "CONTACT",
 ] as const;
 export type LeadJourneyPage = (typeof _leadJourneyPage)[number];
 export const leadJourneyPage = pgEnum("lead_journey_page", _leadJourneyPage);
