@@ -9,10 +9,17 @@ export default function Turnover() {
   const router = useRouter();
   const { data, error, isLoading } = api.annualTurnoverGBP.getAll.useQuery();
 
+  const { mutate } = api.lead.patch.useMutation({
+    onSuccess: () => router.push("/invoice-financing/tenure"),
+    onError: (error) => console.error(error),
+  });
+
   const onValueChange = (value: string) => {
     setSelectedValue(value);
 
-    // set value in zustand
+    mutate({
+      annualTurnoverGBPId: parseInt(value),
+    });
   };
 
   const items = data?.map((item) => ({
@@ -23,9 +30,9 @@ export default function Turnover() {
   if (data && items)
     return (
       <div className="w-full">
-        <h1 className="mb-8 text-center text-lg text-primary">
+        <h2 className="mb-8 text-center text-lg text-primary">
           What's your annual turnover?
-        </h1>
+        </h2>
         <RadioGroup
           items={items}
           onValueChange={onValueChange}

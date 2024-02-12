@@ -9,10 +9,17 @@ export default function Tenure() {
   const router = useRouter();
   const { data, error, isLoading } = api.tenure.getAll.useQuery();
 
+  const { mutate } = api.lead.patch.useMutation({
+    onSuccess: () => router.push("/invoice-financing/success"),
+    onError: (error) => console.error(error),
+  });
+
   const onValueChange = (value: string) => {
     setSelectedValue(value);
 
-    // set value in zustand
+    mutate({
+      tenureYrsId: parseInt(value),
+    });
   };
 
   const items = data?.map((item) => ({
@@ -23,9 +30,9 @@ export default function Tenure() {
   if (data && items)
     return (
       <div className="w-full">
-        <h1 className="mb-8 text-center text-lg text-primary">
+        <h2 className="mb-8 text-center text-lg text-primary">
           How long have you been trading?
-        </h1>
+        </h2>
         <RadioGroup
           items={items}
           onValueChange={onValueChange}

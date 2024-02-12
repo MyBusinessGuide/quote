@@ -16,12 +16,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
 
 export const vertical = createTable("vertical", {
@@ -40,17 +34,6 @@ export const industry = createTable("industry", {
   label: varchar("label", { length: 256 }).notNull().unique(),
 });
 
-const _leadJourneyPage = [
-  "COMPANY_NAME",
-  "ANNUAL_TURNOVER",
-  "INDUSTRY",
-  "TENURE",
-  "COMPANY_API",
-  "CONTACT",
-] as const;
-export type LeadJourneyPage = (typeof _leadJourneyPage)[number];
-export const leadJourneyPage = pgEnum("lead_journey_page", _leadJourneyPage);
-
 export const annualTurnoverGBP = createTable("annual_turnover_gbp", {
   id: serial("id").primaryKey(),
   minGBP: integer("min_gbp"),
@@ -64,41 +47,6 @@ export const tenure_yrs = createTable("tenure_yrs", {
   maxYrs: integer("max_yrs"),
   label: varchar("label", { length: 256 }).notNull(),
 });
-
-export const leadJourney = createTable(
-  "lead_journey",
-  {
-    id: serial("id").primaryKey(),
-    verticalId: integer("vertical_id")
-      .references(() => vertical.id)
-      .notNull(),
-    companyTypeId: integer("company_type_id")
-      .references(() => companyType.id)
-      .notNull(),
-    firstLeadJourneyStepId: integer("first_lead_journey_step_id")
-      .notNull()
-      .references(() => leadJourneyStep.id),
-  },
-  (t) => ({
-    unq: unique().on(t.companyTypeId, t.verticalId),
-  }),
-);
-
-export const leadJourneyStep = createTable(
-  "lead_journey_step",
-  {
-    id: serial("id").primaryKey(),
-    leadJourneyPage: leadJourneyPage("lead_journey_page").notNull(),
-    slug: text("slug").unique().notNull(),
-    nextJourneyStepId: integer("next_journey_step"),
-  },
-  (t) => ({
-    nextJourneyStepReference: foreignKey({
-      columns: [t.nextJourneyStepId],
-      foreignColumns: [t.id],
-    }),
-  }),
-);
 
 export const lead = createTable("lead", {
   id: serial("id").primaryKey(),
