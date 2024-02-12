@@ -23,7 +23,7 @@ export default function Turnover() {
     return (
       <div className="w-full">
         <h2 className="mb-8 text-center text-lg text-primary">
-          What's your annual turnover?
+          What&apos;s your annual turnover?
         </h2>
         <RadioGroup
           items={items}

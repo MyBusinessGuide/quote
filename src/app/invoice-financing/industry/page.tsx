@@ -24,7 +24,7 @@ export default function Industry() {
     return (
       <div className="w-full">
         <h2 className="mb-8 text-center text-lg text-primary">
-          What's your industry?
+          What&apos;s your industry?
         </h2>
         <RadioGroup
           items={items}
