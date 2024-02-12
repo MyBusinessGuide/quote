@@ -1,25 +1,17 @@
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
+import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 
 export default function Turnover() {
-  const [selectedValue, setSelectedValue] = useState<string | undefined>();
   const router = useRouter();
   const { data, error, isLoading } = api.annualTurnoverGBP.getAll.useQuery();
-
-  const { mutate } = api.lead.patch.useMutation({
-    onSuccess: () => router.push("/invoice-financing/tenure"),
-    onError: (error) => console.error(error),
-  });
+  const { values, setValue } = useInvoiceFinancing();
 
   const onValueChange = (value: string) => {
-    setSelectedValue(value);
-
-    mutate({
-      annualTurnoverGBPId: parseInt(value),
-    });
+    setValue("turnoverId", Number(value));
+    router.push("/invoice-financing/tenure");
   };
 
   const items = data?.map((item) => ({
@@ -36,7 +28,7 @@ export default function Turnover() {
         <RadioGroup
           items={items}
           onValueChange={onValueChange}
-          value={selectedValue}
+          value={values.turnoverId?.toString()}
         />
       </div>
     );
