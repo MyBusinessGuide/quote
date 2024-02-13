@@ -11,7 +11,7 @@ export default function Turnover() {
 
   const onValueChange = (value: string) => {
     setValue("turnoverId", Number(value));
-    router.push("/invoice-financing/tenure");
+    router.push("/invoice-financing/industry");
   };
 
   const items = data?.map((item) => ({
