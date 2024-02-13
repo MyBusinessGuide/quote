@@ -2,6 +2,7 @@
 import { cva } from "class-variance-authority";
 import { ComponentProps } from "react";
 import { cn } from "../_utils/cn";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 const inputVariants = cva("border-b-1 py-2 text-lg", {
   variants: {
@@ -17,6 +18,7 @@ type InputProps = {
   label: string;
   error?: string;
   required?: boolean;
+  register?: UseFormRegisterReturn;
 } & ComponentProps<"input">;
 
 export default function Input({
@@ -24,6 +26,7 @@ export default function Input({
   label,
   required,
   error,
+  register,
   ...props
 }: InputProps) {
   return (
@@ -32,11 +35,12 @@ export default function Input({
         {label} {required && "*"}
       </label>
       <input
+        {...register}
         {...props}
         id={id}
         className={cn(inputVariants({ error: !!error }))}
       />
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 }

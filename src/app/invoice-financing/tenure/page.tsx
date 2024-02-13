@@ -12,7 +12,7 @@ export default function Tenure() {
 
   const onValueChange = (value: string) => {
     setValue("tenureId", Number(value));
-    router.push("/invoice-financing/success");
+    router.push("/invoice-financing/contact");
   };
 
   const items = data?.map((item) => ({
