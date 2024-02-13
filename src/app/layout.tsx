@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <TRPCReactProvider>
         <body
-          className={`font-sans ${inter.variable} flex min-h-screen flex-col justify-between`}
+          className={`font-sans ${inter.variable} flex min-h-screen flex-col justify-between text-primary-900`}
         >
           <Nav />
           {children}

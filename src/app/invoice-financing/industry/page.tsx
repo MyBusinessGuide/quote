@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
+import FlowLayout from "~/app/_components/FlowLayout";
 
 export default function Industry() {
   const router = useRouter();
@@ -22,16 +23,18 @@ export default function Industry() {
 
   if (data && items)
     return (
-      <div className="w-full">
-        <h2 className="mb-8 text-center text-lg text-primary">
-          What&apos;s your industry?
-        </h2>
-        <RadioGroup
-          items={items}
-          onValueChange={onValueChange}
-          value={values.industryId?.toString()}
-        />
-      </div>
+      <FlowLayout backUrl="/invoice-financing/turnover">
+        <div className="w-full">
+          <h2 className="mb-8 text-center text-lg text-primary">
+            What&apos;s your industry?
+          </h2>
+          <RadioGroup
+            items={items}
+            onValueChange={onValueChange}
+            value={values.industryId?.toString()}
+          />
+        </div>
+      </FlowLayout>
     );
 
   if (isLoading) return <div>Loading...</div>;
