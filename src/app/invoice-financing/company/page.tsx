@@ -77,8 +77,8 @@ export default function Company() {
         <CompanyList
           isLoading={isLoadingOfficers}
           items={officers}
-          selectedId={selectedCompanyNumber}
-          onItemClick={(id) => setSelectedCompanyNumber(id)}
+          selectedId={"-1"}
+          onItemClick={() => "tmp"}
           error={errorOfficers?.message}
           numOfLoadingItems={3}
         />
