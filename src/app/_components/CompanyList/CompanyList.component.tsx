@@ -29,7 +29,7 @@ export default function CompanyList({
   if (isLoading)
     return (
       <ul className="flex max-h-[30vh] flex-col overflow-y-auto">
-        {[...Array(numOfLoadingItems)].map((_, index) => (
+        {[...(Array(numOfLoadingItems) as number[])].map((_, index) => (
           <CompanyListItemSkeleton key={`itemSkeleton${index}`} />
         ))}
       </ul>
