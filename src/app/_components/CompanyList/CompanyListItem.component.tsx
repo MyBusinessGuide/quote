@@ -1,0 +1,39 @@
+import { VariantProps, cva } from "class-variance-authority";
+import { cn } from "~/app/_utils/cn";
+
+const companyListItemVariants = cva(
+  "h-5 w-5 rounded-full border-1 border-primary transition-colors",
+  {
+    variants: {
+      selected: {
+        true: " bg-primary-500",
+        false: "",
+      },
+    },
+    defaultVariants: {
+      selected: false,
+    },
+  },
+);
+
+export type CompanyListItemProps = {
+  id: string;
+  title: string;
+  subtitle: string;
+} & VariantProps<typeof companyListItemVariants>;
+
+export default function CompanyListItem({
+  title,
+  subtitle,
+  selected,
+}: CompanyListItemProps) {
+  return (
+    <li className="flex items-center justify-between border-b border-primary-100 py-2 pr-4 ">
+      <div>
+        <h5>{title}</h5>
+        <h6 className="mt-1 text-sm font-medium">{subtitle}</h6>
+      </div>
+      <div className={cn(companyListItemVariants({ selected }))} />
+    </li>
+  );
+}

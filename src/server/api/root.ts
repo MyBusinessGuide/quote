@@ -3,6 +3,7 @@ import { annualTurnoverGBPRouter } from "./routers/annualTurnoverGBP";
 import { industryRouter } from "./routers/industry";
 import { tenureRouter } from "./routers/tenure";
 import { leadRouter } from "./routers/lead";
+import { companyApiRouter } from "./routers/companyApi";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   industry: industryRouter,
   tenure: tenureRouter,
   lead: leadRouter,
+  companyApi: companyApiRouter,
 });
 
 // export type definition of API
