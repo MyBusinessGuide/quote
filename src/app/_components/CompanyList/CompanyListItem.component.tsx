@@ -29,7 +29,7 @@ export default function CompanyListItem({
 }: CompanyListItemProps) {
   return (
     <li className="flex items-center justify-between border-b border-primary-100 py-2 pr-4 ">
-      <div>
+      <div className="flex-1">
         <h5>{title}</h5>
         <h6 className="mt-1 text-sm font-medium">{subtitle}</h6>
       </div>

@@ -92,7 +92,7 @@ export type Company = {
   title?: string;
 };
 
-export type CompanyAPISearchResponse = {
+export type CompanyAPISearchCompanyResponse = {
   etag?: string;
   items?: Company[];
   items_per_page?: number;

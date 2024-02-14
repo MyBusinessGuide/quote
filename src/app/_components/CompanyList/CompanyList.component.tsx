@@ -11,6 +11,7 @@ type CompanyListProps = {
   selectedId?: string;
   onItemClick: (id: string) => void;
   error?: string;
+  numOfLoadingItems?: number;
 };
 
 export default function CompanyList({
@@ -20,6 +21,7 @@ export default function CompanyList({
   selectedId,
   onItemClick,
   error,
+  numOfLoadingItems = 6,
 }: CompanyListProps) {
   if (error)
     return <div className=" w-full text-center text-red-700 ">{error}</div>;
@@ -27,12 +29,9 @@ export default function CompanyList({
   if (isLoading)
     return (
       <ul className="flex max-h-[30vh] flex-col overflow-y-auto">
-        <CompanyListItemSkeleton />
-        <CompanyListItemSkeleton />
-        <CompanyListItemSkeleton />
-        <CompanyListItemSkeleton />
-        <CompanyListItemSkeleton />
-        <CompanyListItemSkeleton />
+        {[...Array(numOfLoadingItems)].map((_, index) => (
+          <CompanyListItemSkeleton key={`itemSkeleton${index}`} />
+        ))}
       </ul>
     );
 
