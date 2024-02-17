@@ -58,7 +58,7 @@ export default function Contact() {
 
     postLead({
       annualTurnoverGBPId: values.turnoverId,
-      companyName: values.companyName,
+      companyName: values.companyName || "ERROR",
       email: data.email,
       fullName: data.fullName,
       industryId: values.industryId,
