@@ -8,6 +8,7 @@ const buttonVariant = cva("rounded-3xl cursor-pointer", {
     variant: {
       primary: "bg-primary text-white py-3 px-10",
       underline: "underline",
+      outline: "border border-primary text-primary py-3 px-10",
     },
     fullWidth: {
       true: "w-full",
