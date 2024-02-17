@@ -1,6 +1,6 @@
 "use server";
 import { api } from "~/trpc/server";
-import Tenure from "./_Tenure";
+import Tenure from "./_components/_Tenure";
 
 export default async function TenurePage() {
   const data = await api.tenure.getAll.query();
