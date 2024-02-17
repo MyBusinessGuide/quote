@@ -16,7 +16,7 @@ export default function OfficerSelect() {
   const [nameAvailable, setNameAvailable] = useState(true);
   const [selectedOfficerId, setSelectedOfficerId] = useState<
     string | undefined
-  >(invoiceFinancingState.fullName || undefined);
+  >(invoiceFinancingState.fullName ?? undefined);
 
   const {
     data: dataOfficers,
@@ -61,7 +61,7 @@ export default function OfficerSelect() {
         <CompanyListItem
           id={invoiceFinancingState.companyNumber ?? "-1"}
           title={invoiceFinancingState.companyName ?? "Error"}
-          subtitle={invoiceFinancingState.companyNumber || ""}
+          subtitle={invoiceFinancingState.companyNumber ?? ""}
           selected
           className="pt-0"
         />
@@ -69,9 +69,9 @@ export default function OfficerSelect() {
       <h3 className="mb-1 mt-4 font-medium">
         Who&apos;s applying for finance?
       </h3>
-      {(!isLoadingOfficers && officers.length === 0) || !nameAvailable ? (
+      {(!isLoadingOfficers && officers.length === 0) ?? !nameAvailable ? (
         <Input
-          value={invoiceFinancingState.fullName || undefined}
+          value={invoiceFinancingState.fullName ?? undefined}
           onChange={(e) => setInvoiceFinancingState("fullName", e.target.value)}
           id="officers-input"
           label="Full name"

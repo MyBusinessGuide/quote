@@ -46,7 +46,7 @@ export default function Company() {
         <Button
           className="mt-8"
           disabled={
-            !invoiceFinancingState.companyNumber ||
+            !invoiceFinancingState.companyNumber ??
             !invoiceFinancingState.fullName
           }
           fullWidth

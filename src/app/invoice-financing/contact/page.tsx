@@ -33,7 +33,7 @@ export default function Contact() {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      fullName: values.fullName || "NO",
+      fullName: values.fullName ?? "NO",
     },
     resolver: zodResolver(inputsSchema),
   });
@@ -47,9 +47,9 @@ export default function Contact() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     if (
-      !values.companyName ||
-      !values.turnoverId ||
-      !values.industryId ||
+      !values.companyName ??
+      !values.turnoverId ??
+      !values.industryId ??
       !values.tenureId
     ) {
       alert("Please fill out the previous forms");

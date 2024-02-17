@@ -28,7 +28,7 @@ export default function CompanySearch({ query }: CompanySearchProps) {
 
     let tenureId: number | null;
 
-    if (!tenureYrs || tenureYrs <= 1) {
+    if (!tenureYrs ?? tenureYrs <= 1) {
       tenureId = 1;
     } else if (tenureYrs <= 2) {
       tenureId = 2;
@@ -77,7 +77,7 @@ export default function CompanySearch({ query }: CompanySearchProps) {
       <CompanyList
         isLoading={isLoading}
         items={items}
-        selectedId={invoiceFinancingState.companyNumber || undefined}
+        selectedId={invoiceFinancingState.companyNumber ?? undefined}
         onItemClick={onCompanySelect}
         error={error?.message}
       />
