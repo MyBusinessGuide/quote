@@ -1,13 +1,21 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
-import FlowLayout from "~/app/_components/FlowLayout";
 
-export default function Industry() {
+type IndustryProps = {
+  initialData: Awaited<ReturnType<typeof apiServer.industry.getAll.query>>;
+};
+
+export default function Industry({ initialData }: IndustryProps) {
   const router = useRouter();
-  const { data, error, isLoading } = api.industry.getAll.useQuery();
+  const { data, error, isLoading } = api.industry.getAll.useQuery(undefined, {
+    initialData,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
   const { values, setValue } = useInvoiceFinancing();
 
@@ -23,18 +31,11 @@ export default function Industry() {
 
   if (data && items)
     return (
-      <FlowLayout backUrl="/invoice-financing/turnover">
-        <div className="w-full">
-          <h2 className="mb-8 text-center text-lg text-primary">
-            What&apos;s your industry?
-          </h2>
-          <RadioGroup
-            items={items}
-            onValueChange={onValueChange}
-            value={values.industryId?.toString()}
-          />
-        </div>
-      </FlowLayout>
+      <RadioGroup
+        items={items}
+        onValueChange={onValueChange}
+        value={values.industryId?.toString()}
+      />
     );
 
   if (isLoading) return <div>Loading...</div>;

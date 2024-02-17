@@ -1,3 +1,4 @@
+"use server";
 import { MoveLeft, X } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -9,7 +10,7 @@ type FlowLayoutProps = {
   className?: string;
 };
 
-export default function FlowLayout({
+export default async function FlowLayout({
   children,
   backUrl,
   className,

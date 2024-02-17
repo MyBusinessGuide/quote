@@ -22,7 +22,7 @@ export default function Company() {
   };
 
   return (
-    <FlowLayout backUrl="industry" className="flex min-h-[50vh] flex-col gap-2">
+    <>
       <Input
         id={"company-name"}
         label={"Company name"}
@@ -54,6 +54,6 @@ export default function Company() {
           Next
         </Button>
       </Link>
-    </FlowLayout>
+    </>
   );
 }

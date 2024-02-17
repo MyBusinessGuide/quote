@@ -1,13 +1,26 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
-import FlowLayout from "~/app/_components/FlowLayout";
 
-export default function Turnover() {
+type TurnoverProps = {
+  initialData: Awaited<
+    ReturnType<typeof apiServer.annualTurnoverGBP.getAll.query>
+  >;
+};
+
+export default function Turnover({ initialData }: TurnoverProps) {
   const router = useRouter();
-  const { data, error, isLoading } = api.annualTurnoverGBP.getAll.useQuery();
+  const { data, error, isLoading } = api.annualTurnoverGBP.getAll.useQuery(
+    undefined,
+    {
+      initialData,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    },
+  );
   const { values, setValue } = useInvoiceFinancing();
 
   const onValueChange = (value: string) => {
@@ -22,18 +35,11 @@ export default function Turnover() {
 
   if (data && items)
     return (
-      <FlowLayout backUrl="">
-        <div className="w-full">
-          <h2 className="mb-8 text-center text-lg text-primary">
-            What&apos;s your annual turnover?
-          </h2>
-          <RadioGroup
-            items={items}
-            onValueChange={onValueChange}
-            value={values.turnoverId?.toString()}
-          />
-        </div>
-      </FlowLayout>
+      <RadioGroup
+        items={items}
+        onValueChange={onValueChange}
+        value={values.turnoverId?.toString()}
+      />
     );
 
   if (isLoading) return <div>Loading...</div>;

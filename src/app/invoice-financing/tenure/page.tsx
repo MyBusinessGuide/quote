@@ -1,13 +1,22 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 import FlowLayout from "~/app/_components/FlowLayout";
 
-export default function Tenure() {
+type TenureProps = {
+  initialData: Awaited<ReturnType<typeof apiServer.tenure.getAll.query>>;
+};
+
+export default function Tenure({ initialData }: TenureProps) {
   const router = useRouter();
-  const { data, error, isLoading } = api.tenure.getAll.useQuery();
+  const { data, error, isLoading } = api.tenure.getAll.useQuery(undefined, {
+    initialData,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   const { values, setValue } = useInvoiceFinancing();
 
   const onValueChange = (value: string) => {
@@ -22,18 +31,11 @@ export default function Tenure() {
 
   if (data && items)
     return (
-      <FlowLayout backUrl="company">
-        <div className="w-full">
-          <h2 className="mb-8 text-center text-lg text-primary">
-            How long have you been trading?
-          </h2>
-          <RadioGroup
-            items={items}
-            onValueChange={onValueChange}
-            value={values.tenureId?.toString()}
-          />
-        </div>
-      </FlowLayout>
+      <RadioGroup
+        items={items}
+        onValueChange={onValueChange}
+        value={values.tenureId?.toString()}
+      />
     );
 
   if (isLoading) return <div>Loading...</div>;
