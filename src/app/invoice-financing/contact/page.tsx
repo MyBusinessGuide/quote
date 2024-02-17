@@ -64,6 +64,10 @@ export default function Contact() {
       industryId: values.industryId,
       phoneNumber: data.phoneNumber.toString(),
       tenureYrsId: values.tenureId,
+      address: values.address,
+      companyStatus: values.companyStatus,
+      companyType: values.companyType,
+      postalCode: values.postalCode,
     });
   };
 

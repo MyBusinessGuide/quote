@@ -8,8 +8,10 @@ export const invoiceFinancingValuesSchema = z.object({
   companyName: z.string().nullable(),
   companyNumber: z.string().nullable(),
   fullName: z.string().nullable(),
-  phoneNumber: z.string().nullable(),
-  email: z.string().nullable(),
+  address: z.string().optional(),
+  postalCode: z.string().optional(),
+  companyType: z.string().optional(),
+  companyStatus: z.string().optional(),
 });
 
 export type InvoiceFinancingValues = z.infer<
@@ -22,9 +24,11 @@ export const invoiceFinancingDefaultValues: InvoiceFinancingValues = {
   companyName: null,
   tenureId: null,
   fullName: null,
-  phoneNumber: null,
-  email: null,
   companyNumber: null,
+  address: undefined,
+  postalCode: undefined,
+  companyType: undefined,
+  companyStatus: undefined,
 };
 
 type UseInvoiceFinancingState = {

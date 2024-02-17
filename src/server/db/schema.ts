@@ -1,5 +1,4 @@
 import {
-  boolean,
   integer,
   pgTableCreator,
   serial,
@@ -8,11 +7,6 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
-
-export const companyType = createTable("company_type", {
-  id: serial("id").primaryKey().notNull(),
-  label: varchar("label", { length: 256 }).notNull().unique(),
-});
 
 export const industry = createTable("industry", {
   id: serial("id").primaryKey().notNull(),
@@ -38,7 +32,6 @@ export const lead = createTable("lead", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id),
-  companyTypeId: integer("company_type_id").references(() => companyType.id),
   companyName: text("company_name"),
   annualTurnoverGBPId: integer("annual_turnover_gbp_id").references(
     () => annualTurnoverGBP.id,
@@ -46,7 +39,10 @@ export const lead = createTable("lead", {
   industryId: integer("industry_id").references(() => industry.id),
   tenureYrsId: integer("tenure_yrs_id").references(() => tenure_yrs.id),
   amountGBP: integer("amount_gbp"),
-  submitted: boolean("submitted").default(false),
+  companyStatus: varchar("company_status", { length: 256 }),
+  address: varchar("address", { length: 256 }),
+  postalCode: varchar("postal_code", { length: 256 }),
+  companyType: varchar("company_type", { length: 256 }),
 });
 
 export const users = createTable("user", {

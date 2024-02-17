@@ -14,6 +14,10 @@ export const leadRouter = createTRPCRouter({
         annualTurnoverGBPId: z.number(),
         industryId: z.number(),
         tenureYrsId: z.number(),
+        address: z.string().optional(),
+        postalCode: z.string().optional(),
+        companyType: z.string().optional(),
+        companyStatus: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -47,6 +51,10 @@ export const leadRouter = createTRPCRouter({
         annualTurnoverGBPId: input.annualTurnoverGBPId,
         industryId: input.industryId,
         tenureYrsId: input.tenureYrsId,
+        address: input.address,
+        postalCode: input.postalCode,
+        companyType: input.companyType,
+        companyStatus: input.companyStatus,
       });
     }),
 });
