@@ -53,6 +53,11 @@ export default function OfficerSelect() {
           onClick={() => {
             setInvoiceFinancingState("companyNumber", null);
             setInvoiceFinancingState("companyName", null);
+            setInvoiceFinancingState("companyStatus", undefined);
+            setInvoiceFinancingState("address", undefined);
+            setInvoiceFinancingState("companyType", undefined);
+            setInvoiceFinancingState("postalCode", undefined);
+            setInvoiceFinancingState("tenureId", null);
             setInvoiceFinancingState("fullName", null);
           }}
         >
