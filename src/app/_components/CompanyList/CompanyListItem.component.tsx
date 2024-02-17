@@ -20,15 +20,22 @@ export type CompanyListItemProps = {
   id: string;
   title: string;
   subtitle: string;
+  className?: string;
 } & VariantProps<typeof companyListItemVariants>;
 
 export default function CompanyListItem({
   title,
   subtitle,
   selected,
+  className,
 }: CompanyListItemProps) {
   return (
-    <li className="flex items-center justify-between border-b border-primary-100 py-2 pr-4 ">
+    <li
+      className={cn(
+        "flex items-center justify-between border-b border-primary-100 py-2 pr-4 ",
+        className,
+      )}
+    >
       <div className="flex-1">
         <h5>{title}</h5>
         <h6 className="mt-1 text-sm font-medium">{subtitle}</h6>

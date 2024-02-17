@@ -1,4 +1,4 @@
-import { set, z } from "zod";
+import { z } from "zod";
 import { create } from "zustand";
 
 export const invoiceFinancingValuesSchema = z.object({
@@ -6,6 +6,7 @@ export const invoiceFinancingValuesSchema = z.object({
   industryId: z.number().nullable(),
   tenureId: z.number().nullable(),
   companyName: z.string().nullable(),
+  companyNumber: z.string().nullable(),
   fullName: z.string().nullable(),
   phoneNumber: z.string().nullable(),
   email: z.string().nullable(),
@@ -23,6 +24,7 @@ export const invoiceFinancingDefaultValues: InvoiceFinancingValues = {
   fullName: null,
   phoneNumber: null,
   email: null,
+  companyNumber: null,
 };
 
 type UseInvoiceFinancingState = {
@@ -35,6 +37,15 @@ type UseInvoiceFinancingState = {
     value: Value,
   ) => void;
   setAllData: (values: InvoiceFinancingValues) => void;
+  set: (
+    partial:
+      | UseInvoiceFinancingState
+      | Partial<UseInvoiceFinancingState>
+      | ((
+          state: UseInvoiceFinancingState,
+        ) => UseInvoiceFinancingState | Partial<UseInvoiceFinancingState>),
+    replace?: boolean | undefined,
+  ) => void;
 };
 
 export const useInvoiceFinancingState = create<UseInvoiceFinancingState>(
@@ -43,5 +54,6 @@ export const useInvoiceFinancingState = create<UseInvoiceFinancingState>(
     setData: (key, value) =>
       set((prev) => ({ ...prev, data: { ...prev.data, [key]: value } })),
     setAllData: (values) => set((prev) => ({ ...prev, data: values })),
+    set,
   }),
 );

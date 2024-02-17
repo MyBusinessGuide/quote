@@ -22,7 +22,7 @@ export default function Tenure() {
 
   if (data && items)
     return (
-      <FlowLayout backUrl="/invoice-financing/industry">
+      <FlowLayout backUrl="company">
         <div className="w-full">
           <h2 className="mb-8 text-center text-lg text-primary">
             How long have you been trading?

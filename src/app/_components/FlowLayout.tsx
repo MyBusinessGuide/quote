@@ -5,7 +5,7 @@ import { cn } from "../_utils/cn";
 
 type FlowLayoutProps = {
   children: ReactNode;
-  backUrl: string;
+  backUrl?: string;
   className?: string;
 };
 
@@ -17,9 +17,13 @@ export default function FlowLayout({
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center gap-2 md:p-6">
       <div className="flex w-full flex-1 justify-between p-4 ">
-        <Link href={backUrl}>
-          <MoveLeft className="text-primary-800" />
-        </Link>
+        {backUrl ? (
+          <Link href={backUrl}>
+            <MoveLeft className="text-primary-800" />
+          </Link>
+        ) : (
+          <div />
+        )}
         <h1 className="text-lg font-medium text-primary-800">
           Your Invoice Finance Quote
         </h1>

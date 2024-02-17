@@ -6,6 +6,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import * as z from "zod";
+import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
+import { useRouter } from "next/navigation";
+import { api } from "~/trpc/react";
 
 const inputsSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -20,19 +23,52 @@ const inputsSchema = z.object({
 
 type Inputs = z.infer<typeof inputsSchema>;
 
-export default function Success() {
+export default function Contact() {
+  const { values, clear } = useInvoiceFinancing();
+  const navigate = useRouter();
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>({
+    defaultValues: {
+      fullName: values.fullName || "NO",
+    },
     resolver: zodResolver(inputsSchema),
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
+  const { mutate: postLead } = api.lead.post.useMutation({
+    onSuccess: () => {
+      clear();
+      navigate.push("thank-you");
+    },
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    if (
+      !values.companyName ||
+      !values.turnoverId ||
+      !values.industryId ||
+      !values.tenureId
+    ) {
+      alert("Please fill out the previous forms");
+      return;
+    }
+
+    postLead({
+      annualTurnoverGBPId: values.turnoverId,
+      companyName: values.companyName,
+      email: data.email,
+      fullName: data.fullName,
+      industryId: values.industryId,
+      phoneNumber: data.phoneNumber.toString(),
+      tenureYrsId: values.tenureId,
+    });
+  };
 
   return (
-    <FlowLayout backUrl="/invoice-financing/tenure">
+    <FlowLayout backUrl="company">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
         <h2 className="mb-8 text-center text-lg text-primary">
           Tell us about yourself
@@ -43,6 +79,7 @@ export default function Success() {
           placeholder="Jane Smith"
           required
           register={register("fullName", { required: true })}
+          disabled={!!values.fullName}
           error={errors.fullName?.message}
         />
         <Input

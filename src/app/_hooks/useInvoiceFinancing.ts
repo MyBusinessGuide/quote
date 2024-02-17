@@ -7,7 +7,7 @@ import {
 } from "../_state/invoiceFinancingStore";
 
 export default function useInvoiceFinancing() {
-  const { data, setData, setAllData } = useInvoiceFinancingState();
+  const { data, setData, setAllData, set } = useInvoiceFinancingState();
 
   useEffect(() => {
     const localStorageData = localStorage.getItem("invoice-financing");
@@ -33,16 +33,29 @@ export default function useInvoiceFinancing() {
     Key extends keyof InvoiceFinancingValues,
     Value extends InvoiceFinancingValues[Key],
   >(key: Key, value: Value) {
-    localStorage.setItem(
-      "invoice-financing",
-      JSON.stringify({ ...data, [key]: value }),
-    );
+    // set used to get the correct previous state
+    set((prev) => {
+      localStorage.setItem(
+        "invoice-financing",
+        JSON.stringify({ ...prev.data, [key]: value }),
+      );
+      return prev;
+    });
     setData(key, value);
     return;
   }
 
+  const clear = () => {
+    setAllData(invoiceFinancingDefaultValues);
+    localStorage.setItem(
+      "invoice-financing",
+      JSON.stringify(invoiceFinancingDefaultValues),
+    );
+  };
+
   return {
     values: data,
     setValue,
+    clear,
   };
 }

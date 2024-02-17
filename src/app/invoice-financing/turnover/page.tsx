@@ -22,7 +22,7 @@ export default function Turnover() {
 
   if (data && items)
     return (
-      <FlowLayout backUrl="/invoice-financing">
+      <FlowLayout backUrl="">
         <div className="w-full">
           <h2 className="mb-8 text-center text-lg text-primary">
             What&apos;s your annual turnover?

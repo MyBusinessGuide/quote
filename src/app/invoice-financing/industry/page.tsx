@@ -13,7 +13,7 @@ export default function Industry() {
 
   const onValueChange = (value: string) => {
     setValue("industryId", Number(value));
-    router.push("/invoice-financing/tenure");
+    router.push("/invoice-financing/company");
   };
 
   const items = data?.map((item) => ({
