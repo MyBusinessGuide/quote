@@ -38,7 +38,7 @@ export default function Contact() {
     resolver: zodResolver(inputsSchema),
   });
 
-  const { mutate: postLead } = api.lead.post.useMutation({
+  const { mutate: postLead, isLoading } = api.lead.post.useMutation({
     onSuccess: () => {
       clear();
       navigate.push("thank-you");
@@ -111,7 +111,9 @@ export default function Contact() {
           <span className="underline">privacy policy</span>
         </p>
 
-        <Button type="submit">Find Expert</Button>
+        <Button type="submit" loading={isLoading}>
+          Find Expert
+        </Button>
       </form>
     </FlowLayout>
   );

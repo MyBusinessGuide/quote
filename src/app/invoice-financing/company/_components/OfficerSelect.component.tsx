@@ -69,9 +69,9 @@ export default function OfficerSelect() {
       <h3 className="mb-1 mt-4 font-medium">
         Who&apos;s applying for finance?
       </h3>
-      {(!isLoadingOfficers && officers.length === 0) ?? !nameAvailable ? (
+      {(!isLoadingOfficers && officers.length === 0) || !nameAvailable ? (
         <Input
-          value={invoiceFinancingState.fullName ?? undefined}
+          value={invoiceFinancingState.fullName || undefined}
           onChange={(e) => setInvoiceFinancingState("fullName", e.target.value)}
           id="officers-input"
           label="Full name"
