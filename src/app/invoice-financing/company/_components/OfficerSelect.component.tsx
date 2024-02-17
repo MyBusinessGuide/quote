@@ -14,6 +14,9 @@ export default function OfficerSelect() {
   const { values: invoiceFinancingState, setValue: setInvoiceFinancingState } =
     useInvoiceFinancing();
   const [nameAvailable, setNameAvailable] = useState(true);
+  const [selectedOfficerId, setSelectedOfficerId] = useState<
+    string | undefined
+  >(invoiceFinancingState.fullName || undefined);
 
   const {
     data: dataOfficers,
@@ -24,11 +27,24 @@ export default function OfficerSelect() {
   });
 
   const officers: CompanyListItemProps[] =
-    dataOfficers?.map((officer, index) => ({
-      id: officer.name + index,
-      title: officer.name,
-      subtitle: `${officer.date_of_birth?.month}/${officer.date_of_birth?.year}`,
-    })) ?? [];
+    dataOfficers?.map((officer, index) => {
+      const subtitle =
+        officer.date_of_birth?.month && officer.date_of_birth.year
+          ? `${officer.date_of_birth?.month}/${officer.date_of_birth?.year}`
+          : "";
+
+      return {
+        id: officer.name + index,
+        title: officer.name,
+        subtitle,
+      };
+    }) ?? [];
+
+  const onOfficersSelect = (value: string) => {
+    const officer = officers.find((o) => o.id === value);
+    setSelectedOfficerId(value);
+    setInvoiceFinancingState("fullName", officer?.title ?? null);
+  };
 
   return (
     <>
@@ -66,15 +82,17 @@ export default function OfficerSelect() {
           <CompanyList
             isLoading={isLoadingOfficers}
             items={officers}
-            selectedId={invoiceFinancingState.fullName || ""}
-            onItemClick={(value) => setInvoiceFinancingState("fullName", value)}
+            selectedId={(item) =>
+              selectedOfficerId ? item.id.startsWith(selectedOfficerId) : false
+            }
+            onItemClick={onOfficersSelect}
             error={errorOfficers?.message}
             numOfLoadingItems={3}
           />
           <Button
             variant={"underline"}
             onClick={() => {
-              setInvoiceFinancingState("fullName", "");
+              setInvoiceFinancingState("fullName", null);
               setNameAvailable(false);
             }}
           >

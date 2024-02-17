@@ -8,7 +8,7 @@ type CompanyListProps = {
   items: CompanyListItemProps[];
   isLoading?: boolean;
   className?: string;
-  selectedId?: string;
+  selectedId?: string | ((item: CompanyListItemProps) => boolean);
   onItemClick: (id: string) => void;
   error?: string;
   numOfLoadingItems?: number;
@@ -40,15 +40,23 @@ export default function CompanyList({
 
   return (
     <ul className={cn("max-h-[30vh] overflow-y-auto", className)}>
-      {items.map((item) => (
-        <button
-          className="w-full text-start"
-          onClick={() => onItemClick(item.id)}
-          key={item.id}
-        >
-          <CompanyListItem {...item} selected={item.id == selectedId} />
-        </button>
-      ))}
+      {items.map((item) => {
+        let selected = false;
+        if (selectedId === undefined) selected = false;
+        else if (typeof selectedId === "string")
+          selected = selectedId == item.id;
+        else selected = selectedId(item);
+
+        return (
+          <button
+            className="w-full text-start"
+            onClick={() => onItemClick(item.id)}
+            key={item.id}
+          >
+            <CompanyListItem {...item} selected={selected} />
+          </button>
+        );
+      })}
     </ul>
   );
 }
