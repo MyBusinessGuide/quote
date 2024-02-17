@@ -4,7 +4,10 @@ export default function RadioGroupSkeleton() {
       {Array(5)
         .fill(0)
         .map((_, index) => (
-          <div className="h-12 w-full animate-pulse rounded-3xl bg-gray-300" />
+          <div
+            key={index}
+            className="h-12 w-full animate-pulse rounded-3xl bg-gray-300"
+          />
         ))}
     </div>
   );
