@@ -1,5 +1,6 @@
 import {
   integer,
+  pgEnum,
   pgTableCreator,
   serial,
   text,
@@ -50,4 +51,25 @@ export const users = createTable("user", {
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
+});
+
+export const leadDeliveryMethod = pgEnum("lead_delivery_method", [
+  "URL",
+  "email",
+  "Zapier",
+]);
+
+export const providers = createTable("provider", {
+  id: serial("id").primaryKey().notNull(),
+  companyName: text("company_name").notNull(),
+  companyNumber: varchar("company_number", { length: 64 }),
+  contactName: varchar("contact_name", { length: 256 }).notNull(),
+  email: varchar("email", { length: 256 }).notNull().unique(),
+  phoneNumber: varchar("phone_number", { length: 256 }),
+  address: varchar("address", { length: 256 }),
+  maxMonthlyBudgetGBP: integer("max_monthly_budget_gbp").notNull(),
+  leadDeliveryMethod: leadDeliveryMethod("lead_delivery_method").notNull(),
+  fcaNumber: varchar("fca_number", { length: 256 }),
+  // - payment_terms
+  // - service
 });
