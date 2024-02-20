@@ -9,6 +9,29 @@ import {
 
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
 
+export const leadCode = pgEnum("lead_code", [
+  "A1",
+  "A2",
+  "A3",
+  "A4",
+  "B1",
+  "B2",
+  "B3",
+  "B4",
+  "C1",
+  "C2",
+  "C3",
+  "C4",
+  "D1",
+  "D2",
+  "D3",
+  "D4",
+  "E1",
+  "E2",
+  "E3",
+  "E4",
+]);
+
 export const industry = createTable("industry", {
   id: serial("id").primaryKey().notNull(),
   label: varchar("label", { length: 256 }).notNull().unique(),
@@ -44,6 +67,7 @@ export const lead = createTable("lead", {
   address: varchar("address", { length: 256 }),
   postalCode: varchar("postal_code", { length: 256 }),
   companyType: varchar("company_type", { length: 256 }),
+  leadCode: leadCode("lead_code").notNull(),
 });
 
 export const users = createTable("user", {
@@ -72,4 +96,23 @@ export const providers = createTable("provider", {
   fcaNumber: varchar("fca_number", { length: 256 }),
   // - payment_terms
   // - service
+});
+
+export const providerBid = createTable("provider_bid", {
+  id: serial("id").primaryKey().notNull(),
+  providerId: integer("provider_id")
+    .notNull()
+    .references(() => providers.id),
+  amountGBP: integer("amount_gbp").notNull(),
+  leadCode: leadCode("lead_code").notNull(),
+});
+
+export const leadProviderConnection = createTable("lead_provider_connection", {
+  id: serial("id").primaryKey().notNull(),
+  leadId: integer("lead_id")
+    .notNull()
+    .references(() => lead.id),
+  providerBidId: integer("provider_bid_id")
+    .notNull()
+    .references(() => providerBid.id),
 });
