@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { desc, eq, max } from "drizzle-orm";
 import { z } from "zod";
+import { sendEmail } from "~/lib/email";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
   lead,
