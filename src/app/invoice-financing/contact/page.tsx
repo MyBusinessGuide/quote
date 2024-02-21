@@ -38,9 +38,16 @@ export default function Contact() {
   });
 
   const { mutate: postLead, isLoading } = api.lead.post.useMutation({
-    onSuccess: () => {
+    onSuccess: ({ error }) => {
       clear();
-      navigate.push("thank-you");
+
+      if (!error) {
+        navigate.push("thank-you");
+      } else if (error === "No provider found") {
+        navigate.push("no-provider");
+      } else {
+        navigate.push("error");
+      }
     },
   });
 

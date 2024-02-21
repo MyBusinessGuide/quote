@@ -15,9 +15,14 @@ const categorizeUserSchema = z.object({
     z.literal(2),
     z.literal(3),
     z.literal(4),
+  ]),
+  turnoverId: z.union([
+    z.literal(1),
+    z.literal(2),
+    z.literal(3),
+    z.literal(4),
     z.literal(5),
   ]),
-  turnoverId: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]),
 });
 
 const categorizeUser = async (tenureYrsId: number, turnoverId: number) => {
@@ -82,7 +87,7 @@ export const leadRouter = createTRPCRouter({
                 name: input.fullName,
               })
               .returning({ id: users.id })
-          )[0]?.id ?? 1;
+          )[0]?.id || 1;
       } else {
         userId = foundUsers[0]?.id ?? 1;
       }
@@ -95,7 +100,7 @@ export const leadRouter = createTRPCRouter({
       if (!leadCode)
         throw new TRPCError({
           code: "UNPROCESSABLE_CONTENT",
-          message: "Lead data is invalid and cannot be categorized.",
+          message: "Lead cannot be categorized.",
         });
 
       const insertedLead = await ctx.db
@@ -115,7 +120,7 @@ export const leadRouter = createTRPCRouter({
         .returning();
 
       if (insertedLead.length === 0) {
-        return { error: "Lead not inserted" };
+        return { error: "Lead not inserted" } as const;
       }
 
       const maxProvider = await ctx.db
@@ -130,7 +135,7 @@ export const leadRouter = createTRPCRouter({
         .limit(1);
 
       if (maxProvider.length === 0) {
-        return { error: "No provider found" };
+        return { error: "No provider found" } as const;
       }
 
       await ctx.db.insert(leadProviderConnection).values({
