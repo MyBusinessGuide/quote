@@ -9,6 +9,8 @@ import {
   providerBid,
   users,
 } from "~/server/db/schema";
+import ProviderConnectionEmail from "../../../../emails/ProviderConnectedLead.email";
+import { render } from "@react-email/render";
 
 const categorizeUserSchema = z.object({
   tenureYrsId: z.union([
@@ -142,6 +144,26 @@ export const leadRouter = createTRPCRouter({
       await ctx.db.insert(leadProviderConnection).values({
         leadId: insertedLead[0]!.id,
         providerBidId: maxProvider[0]!.id,
+      });
+
+      sendEmail({
+        to: input.email,
+        subject: "[BUSINESS NAME] is looking for Invoice Financing",
+        html: render(
+          ProviderConnectionEmail({
+            providerName: "Provider",
+            fullName: input.fullName,
+            quoteDate: new Date().toDateString(),
+            loanAmount: "£" + maxProvider[0]!.amount_gbp,
+            turnover: input.annualTurnoverGBPId.toString(),
+            tenure: input.tenureYrsId.toString(),
+            industry: input.industryId.toString(),
+            companyName: input.companyName,
+            phoneNumber: input.phoneNumber,
+            customerEmail: input.email,
+            winningBidAmount: "£123",
+          }),
+        ),
       });
 
       return { error: null };
