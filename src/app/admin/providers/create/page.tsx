@@ -1,27 +1,37 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import ProviderForm from "../[providerId]/_components/ProviderForm.component";
-import { provider } from "../[providerId]/page";
+import { api } from "~/trpc/react";
 
 export default function ProviderCreatePage() {
+  const router = useRouter();
+
+  const { mutate: createProvider, isLoading } = api.provider.create.useMutation(
+    {
+      onSuccess: (data) => {
+        router.push(`/admin/providers/${data.id}`);
+      },
+    },
+  );
+
   return (
     <ProviderForm
       defaultValues={{
-        companyName: provider.companyName,
-        companyNumber: provider.companyNumber,
-        contactName: provider.contactName,
-        email: provider.email,
-        phoneNumber: provider.phoneNumber,
-        address: provider.address,
-        maxMonthlyBudgetGBP: provider.maxMonthlyBudgetGBP,
-        leadDeliveryMethod: provider.leadDeliveryMethod as
-          | "URL"
-          | "email"
-          | "Zapier",
-        fcaNumber: provider.fcaNumber,
+        companyName: "",
+        companyNumber: "",
+        contactName: "",
+        email: "",
+        phoneNumber: "",
+        address: "",
+        maxMonthlyBudgetGBP: 0,
+        leadDeliveryMethod: "email",
+        fcaNumber: "",
       }}
-      onSubmit={console.log}
+      onSubmit={(values) => createProvider(values)}
       pageTitle="Create Provider"
+      backUrl="/admin/providers"
+      isLoading={isLoading}
     />
   );
 }

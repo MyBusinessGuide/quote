@@ -11,38 +11,32 @@ import {
 } from "@shopify/polaris";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { leadDeliveryMethodValues } from "~/server/db/schema";
-import { provider } from "../page";
+import {
+  insertProviderSchema,
+  leadDeliveryMethodValues,
+} from "~/server/db/schema";
 
 const leadDeliveryMethodOptions = leadDeliveryMethodValues.map((method) => ({
   label: method,
   value: method,
 }));
 
-const ProviderEditSchema = z.object({
-  companyName: z.string(),
-  companyNumber: z.string(),
-  contactName: z.string(),
-  email: z.string().email(),
-  phoneNumber: z.string(),
-  address: z.string(),
-  maxMonthlyBudgetGBP: z.number(),
-  leadDeliveryMethod: z.enum(leadDeliveryMethodValues),
-  fcaNumber: z.string(),
-});
-
-type ProviderEditValues = z.infer<typeof ProviderEditSchema>;
+type ProviderEditValues = z.infer<typeof insertProviderSchema>;
 
 type ProviderFormProps = {
   onSubmit: SubmitHandler<ProviderEditValues>;
   defaultValues: ProviderEditValues;
   pageTitle: string;
+  backUrl: string;
+  isLoading?: boolean;
 };
 
 export default function ProviderForm({
   defaultValues,
   onSubmit,
   pageTitle,
+  backUrl,
+  isLoading,
 }: ProviderFormProps) {
   const {
     handleSubmit,
@@ -50,7 +44,7 @@ export default function ProviderForm({
     control,
   } = useForm<ProviderEditValues>({
     defaultValues: defaultValues,
-    resolver: zodResolver(ProviderEditSchema),
+    resolver: zodResolver(insertProviderSchema),
   });
 
   return (
@@ -77,11 +71,12 @@ export default function ProviderForm({
             name="companyNumber"
             control={control}
             render={({ field }) => {
-              const { ref, ...rest } = field;
+              const { ref, value, ...rest } = field;
               return (
                 <TextField
                   autoComplete="off"
                   label="Company Number"
+                  value={field.value || ""}
                   {...rest}
                   error={errors.companyNumber?.message}
                 />
@@ -123,11 +118,12 @@ export default function ProviderForm({
             name="phoneNumber"
             control={control}
             render={({ field }) => {
-              const { ref, ...rest } = field;
+              const { ref, value, ...rest } = field;
               return (
                 <TextField
                   autoComplete="on"
                   label="Phone number"
+                  value={field.value || ""}
                   {...rest}
                   error={errors.phoneNumber?.message}
                 />
@@ -138,11 +134,12 @@ export default function ProviderForm({
             name="address"
             control={control}
             render={({ field }) => {
-              const { ref, ...rest } = field;
+              const { ref, value, ...rest } = field;
               return (
                 <TextField
                   autoComplete="on"
                   label="Address"
+                  value={field.value || ""}
                   {...rest}
                   error={errors.address?.message}
                 />
@@ -186,11 +183,12 @@ export default function ProviderForm({
             name="fcaNumber"
             control={control}
             render={({ field }) => {
-              const { ref, ...rest } = field;
+              const { ref, value, ...rest } = field;
               return (
                 <TextField
                   autoComplete="on"
                   label="FCA number"
+                  value={field.value || ""}
                   {...rest}
                   error={errors.fcaNumber?.message}
                 />
@@ -200,14 +198,14 @@ export default function ProviderForm({
         </FormLayout>
         <PageActions
           primaryAction={
-            <Button submit variant="primary">
+            <Button submit loading={isLoading} variant="primary">
               Save
             </Button>
           }
           secondaryActions={[
             {
               content: "Cancel",
-              onAction: () => console.log("Cancel"),
+              url: backUrl,
               destructive: true,
             },
           ]}

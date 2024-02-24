@@ -8,38 +8,40 @@ import {
   ResourceList,
   Text,
 } from "@shopify/polaris";
+import { api } from "~/trpc/react";
 
 export default function Providers() {
+  const [data] = api.provider.getAll.useSuspenseQuery();
+
   return (
-    <Page title="Providers">
+    <Page
+      title="Providers"
+      primaryAction={{
+        content: "Create provider",
+        url: "/admin/providers/create",
+      }}
+    >
       <Layout>
         <Layout.Section>
-          <Card>
+          <Card padding={"0"}>
             <ResourceList
               resourceName={{ singular: "customer", plural: "customers" }}
-              items={[
-                {
-                  id: "100",
-                  url: "#",
-                  name: "Mae Jemison",
-                  location: "Decatur, USA",
-                },
-                {
-                  id: "200",
-                  url: "#",
-                  name: "Ellen Ochoa",
-                  location: "Los Angeles, USA",
-                },
-              ]}
+              items={data}
               renderItem={(item) => {
-                const { id, url, name, location } = item;
+                const { id, companyName, companyNumber } = item;
+                const description = companyNumber
+                  ? `Company number - ${companyNumber}`
+                  : "No company number";
 
                 return (
-                  <ResourceItem id={id} url={url}>
+                  <ResourceItem
+                    id={id.toString()}
+                    url={`/admin/providers/${id}`}
+                  >
                     <Text variant="bodyMd" fontWeight="bold" as="h3">
-                      {name}
+                      {companyName}
                     </Text>
-                    <div>{location}</div>
+                    <div>{description}</div>
                   </ResourceItem>
                 );
               }}

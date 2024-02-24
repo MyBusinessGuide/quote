@@ -6,13 +6,23 @@ import {
   Card,
   BlockStack,
   DescriptionList,
+  Modal,
 } from "@shopify/polaris";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 
 type ProviderParams = { params: { providerId: string } };
 
 export default function Provider({ params: { providerId } }: ProviderParams) {
-  console.log(providerId);
+  const router = useRouter();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const { mutate: deleteProvider, isLoading: isLoadingDeleteProvider } =
+    api.provider.delete.useMutation({
+      onSuccess: () => {
+        router.push("/admin/providers");
+      },
+    });
   const [data] = api.provider.get.useSuspenseQuery(
     { id: Number(providerId) },
     {
@@ -22,13 +32,14 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
 
   return (
     <Page
+      backAction={{ content: "Back", url: "/admin/providers" }}
       title={`Provider - ${data.companyName}`}
       // subtitle="Provider from: December 2021"
       secondaryActions={[
-        { content: "Edit", onAction: () => console.log("Edit") },
+        { content: "Edit", url: `/admin/providers/${providerId}/edit` },
         {
           content: "Delete",
-          onAction: () => console.log("Delete"),
+          onAction: () => setDeleteModalOpen(true),
           destructive: true,
         },
       ]}
@@ -104,6 +115,29 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
           <Card></Card>
         </Layout.Section>
       </Layout>
+      <Modal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Are you sure you want to delete this provider?"
+        primaryAction={{
+          content: "Delete",
+          destructive: true,
+          onAction: () => {
+            deleteProvider({ id: Number(providerId) });
+          },
+          loading: isLoadingDeleteProvider,
+        }}
+        secondaryActions={[
+          {
+            content: "Cancel",
+            onAction: () => setDeleteModalOpen(false),
+          },
+        ]}
+      >
+        <Modal.Section>
+          <p>This action cannot be undone.</p>
+        </Modal.Section>
+      </Modal>
     </Page>
   );
 }

@@ -1,4 +1,6 @@
 import {
+  PgColumn,
+  PgTableWithColumns,
   integer,
   pgEnum,
   pgTableCreator,
@@ -7,6 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { createInsertSchema } from "drizzle-zod";
 
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
 
@@ -102,6 +105,12 @@ export const providers = createTable("provider", {
   fcaNumber: varchar("fca_number", { length: 256 }),
   // - payment_terms
   // - service
+});
+export const insertProviderSchema = createInsertSchema(providers, {
+  maxMonthlyBudgetGBP: z.coerce.number().min(0),
+  email: z.string().email(),
+  companyName: z.string().min(1),
+  contactName: z.string().min(1),
 });
 
 export const providerBid = createTable("provider_bid", {

@@ -1,26 +1,43 @@
 "use client";
+import { api } from "~/trpc/react";
 import ProviderForm from "../_components/ProviderForm.component";
-import { provider } from "../page";
+import { useRouter } from "next/navigation";
 
-export default function ProviderEditPage() {
+type ProviderEditParams = { params: { providerId: string } };
+export default function ProviderEditPage({
+  params: { providerId },
+}: ProviderEditParams) {
+  const router = useRouter();
+  const [data] = api.provider.get.useSuspenseQuery(
+    { id: Number(providerId) },
+    {
+      useErrorBoundary: true,
+    },
+  );
+
+  const { mutate: editProvider, isLoading } = api.provider.edit.useMutation({
+    onSuccess: () => {
+      router.push(`/admin/providers/${providerId}`);
+    },
+  });
+
   return (
     <ProviderForm
       defaultValues={{
-        companyName: provider.companyName,
-        companyNumber: provider.companyNumber,
-        contactName: provider.contactName,
-        email: provider.email,
-        phoneNumber: provider.phoneNumber,
-        address: provider.address,
-        maxMonthlyBudgetGBP: provider.maxMonthlyBudgetGBP,
-        leadDeliveryMethod: provider.leadDeliveryMethod as
-          | "URL"
-          | "email"
-          | "Zapier",
-        fcaNumber: provider.fcaNumber,
+        companyName: data.companyName,
+        companyNumber: data.companyNumber,
+        contactName: data.contactName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        address: data.address,
+        maxMonthlyBudgetGBP: data.maxMonthlyBudgetGBP,
+        leadDeliveryMethod: data.leadDeliveryMethod,
+        fcaNumber: data.fcaNumber,
       }}
-      onSubmit={console.log}
-      pageTitle={`Edit - ${provider.companyName}`}
+      onSubmit={(values) => editProvider({ ...values, id: Number(providerId) })}
+      pageTitle={`Edit - ${data.companyName}`}
+      backUrl={`/admin/providers/${providerId}`}
+      isLoading={isLoading}
     />
   );
 }
