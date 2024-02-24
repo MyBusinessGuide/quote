@@ -7,10 +7,16 @@ import {
   BlockStack,
   DescriptionList,
   Modal,
+  DataTable,
+  Box,
+  Button,
+  ButtonGroup,
+  InlineGrid,
 } from "@shopify/polaris";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import ProviderBids from "./_components/ProviderBids.component";
 
 type ProviderParams = { params: { providerId: string } };
 
@@ -34,7 +40,6 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
     <Page
       backAction={{ content: "Back", url: "/admin/providers" }}
       title={`Provider - ${data.companyName}`}
-      // subtitle="Provider from: December 2021"
       secondaryActions={[
         { content: "Edit", url: `/admin/providers/${providerId}/edit` },
         {
@@ -48,7 +53,7 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
         <Layout.Section>
           <BlockStack gap="025">
             <Text id="storeDetails" variant="headingMd" as="h2">
-              Provider details
+              Details
             </Text>
             <Text tone="subdued" as="p">
               These are the detials of the provider. You can edit or delete them
@@ -102,18 +107,22 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
         </Layout.Section>
 
         <Layout.Section>
-          <BlockStack gap="025">
-            <Text id="storeDetails" variant="headingMd" as="h2">
-              Leads
-            </Text>
-            <Text tone="subdued" as="p">
-              These are the leads that have been connected with this provider.
-            </Text>
-          </BlockStack>
+          <InlineGrid columns="1fr auto">
+            <BlockStack gap="025">
+              <Text id="storeDetails" variant="headingMd" as="h2">
+                Bids
+              </Text>
+              <Text tone="subdued" as="p">
+                These are the providers bids and their connected leads.
+              </Text>
+            </BlockStack>
+            <ButtonGroup>
+              <Button>Add</Button>
+            </ButtonGroup>
+          </InlineGrid>
         </Layout.Section>
-        <Layout.Section>
-          <Card></Card>
-        </Layout.Section>
+
+        <ProviderBids providerId={Number(providerId)} />
       </Layout>
       <Modal
         open={deleteModalOpen}
@@ -138,6 +147,7 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
           <p>This action cannot be undone.</p>
         </Modal.Section>
       </Modal>
+      <Box paddingBlock="400" />
     </Page>
   );
 }

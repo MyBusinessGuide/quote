@@ -2,7 +2,13 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { insertProviderSchema, providers } from "~/server/db/schema";
+import {
+  insertProviderSchema,
+  lead,
+  leadProviderConnection,
+  providerBid,
+  providers,
+} from "~/server/db/schema";
 
 export const providerRouter = createTRPCRouter({
   get: publicProcedure
@@ -56,5 +62,34 @@ export const providerRouter = createTRPCRouter({
         .delete(providers)
         .where(eq(providers.id, input.id))
         .returning();
+    }),
+  getProviderBids: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      console.log("input", input);
+      const data = await ctx.db
+        .select()
+        .from(providerBid)
+        .innerJoin(
+          leadProviderConnection,
+          eq(providerBid.id, leadProviderConnection.providerBidId),
+        )
+        .innerJoin(lead, eq(lead.id, leadProviderConnection.leadId))
+        .where(eq(providerBid.providerId, input.id));
+
+      const groupedByProviderBidId = data.reduce<Record<number, typeof data>>(
+        (group, item) => {
+          const providerBidId = item.provider_bid.id;
+          group[providerBidId] = group[providerBidId] || [];
+          group[providerBidId]!.push(item);
+          return group;
+        },
+        {},
+      );
+
+      return Object.entries(groupedByProviderBidId).map(([key, value]) => ({
+        providerBid: value[0]!.provider_bid || null,
+        leads: value,
+      }));
     }),
 });
