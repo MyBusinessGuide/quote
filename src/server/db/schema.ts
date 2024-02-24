@@ -6,6 +6,7 @@ import {
   text,
   varchar,
 } from "drizzle-orm/pg-core";
+import { z } from "zod";
 
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
 
@@ -77,11 +78,16 @@ export const users = createTable("user", {
   phoneNumber: varchar("phone_number", { length: 255 }).notNull(),
 });
 
-export const leadDeliveryMethod = pgEnum("lead_delivery_method", [
-  "URL",
-  "email",
-  "Zapier",
-]);
+export const leadDeliveryMethodValues = ["URL", "email", "Zapier"] as const;
+
+export const leadDeliveryMethod = pgEnum(
+  "lead_delivery_method",
+  leadDeliveryMethodValues,
+);
+
+export const LeadDeliveryMethodEnum = z.enum(
+  leadDeliveryMethod.enumValues,
+).Enum;
 
 export const providers = createTable("provider", {
   id: serial("id").primaryKey().notNull(),
