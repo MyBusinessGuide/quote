@@ -14,7 +14,7 @@ import {
   InlineGrid,
 } from "@shopify/polaris";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { api } from "~/trpc/react";
 import ProviderBids from "./_components/ProviderBids.component";
 
@@ -122,7 +122,9 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
           </InlineGrid>
         </Layout.Section>
 
-        <ProviderBids providerId={Number(providerId)} />
+        <Suspense fallback={<Layout.Section>Loading...</Layout.Section>}>
+          <ProviderBids providerId={Number(providerId)} />
+        </Suspense>
       </Layout>
       <Modal
         open={deleteModalOpen}
@@ -147,6 +149,7 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
           <p>This action cannot be undone.</p>
         </Modal.Section>
       </Modal>
+
       <Box paddingBlock="400" />
     </Page>
   );

@@ -66,30 +66,30 @@ export const providerRouter = createTRPCRouter({
   getProviderBids: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
-      console.log("input", input);
-      const data = await ctx.db
+      const providerBids = await ctx.db
         .select()
         .from(providerBid)
-        .innerJoin(
-          leadProviderConnection,
-          eq(providerBid.id, leadProviderConnection.providerBidId),
-        )
-        .innerJoin(lead, eq(lead.id, leadProviderConnection.leadId))
         .where(eq(providerBid.providerId, input.id));
 
-      const groupedByProviderBidId = data.reduce<Record<number, typeof data>>(
-        (group, item) => {
-          const providerBidId = item.provider_bid.id;
-          group[providerBidId] = group[providerBidId] || [];
-          group[providerBidId]!.push(item);
-          return group;
-        },
-        {},
+      const response = await Promise.all(
+        providerBids.map(async (providerBid) => {
+          const leads = await ctx.db
+            .select({
+              id: lead.id,
+              companyName: lead.companyName,
+              amountGBP: lead.amountGBP,
+            })
+            .from(leadProviderConnection)
+            .innerJoin(lead, eq(lead.id, leadProviderConnection.leadId))
+            .where(eq(leadProviderConnection.providerBidId, providerBid.id));
+
+          return {
+            providerBid,
+            leads,
+          };
+        }),
       );
 
-      return Object.entries(groupedByProviderBidId).map(([key, value]) => ({
-        providerBid: value[0]!.provider_bid || null,
-        leads: value,
-      }));
+      return response;
     }),
 });
