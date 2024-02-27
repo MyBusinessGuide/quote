@@ -201,4 +201,34 @@ export const leadRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db.insert(leadProviderConnection).values(input);
     }),
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db
+      .select()
+      .from(lead)
+      .innerJoin(users, eq(lead.userId, users.id));
+  }),
+  get: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const l = await ctx.db
+        .select()
+        .from(lead)
+        .innerJoin(users, eq(lead.userId, users.id))
+        .where(eq(lead.id, input.id))
+        .limit(1);
+
+      if (!l || !l[0])
+        throw new TRPCError({ code: "NOT_FOUND", message: "Lead not found" });
+
+      return l[0]!;
+    }),
+  delete: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { id } }) => {
+      return await ctx.db.delete(lead).where(eq(lead.id, id));
+    }),
 });
