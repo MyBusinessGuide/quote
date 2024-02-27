@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { api } from "~/trpc/react";
 import ProviderBids from "./_components/ProviderBids.component";
+import Link from "next/link";
 
 type ProviderParams = { params: { providerId: string } };
 
@@ -117,7 +118,9 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
               </Text>
             </BlockStack>
             <ButtonGroup>
-              <Button>Add</Button>
+              <Link href={`/admin/providers/${providerId}/bid/create`}>
+                <Button>Add</Button>
+              </Link>
             </ButtonGroup>
           </InlineGrid>
         </Layout.Section>

@@ -8,11 +8,13 @@ import {
   DataTable,
   Layout,
   Box,
+  Modal,
 } from "@shopify/polaris";
 import ConnectProviderLeadModal from "./ConnectProviderLeadModal.component";
 import { api as apiServer } from "~/trpc/server";
-import { Info } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+import { api } from "~/trpc/react";
 
 type ProviderBidTableProps = Awaited<
   ReturnType<typeof apiServer.provider.getProviderBids.query>
@@ -24,19 +26,38 @@ export default function ProviderBidTable({
 }: ProviderBidTableProps) {
   const [connectProviderBidLeadOpen, setConnectProviderBidLeadOpen] =
     useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const utils = api.useUtils();
+  const { mutate: deleteProviderBid, isLoading: isLoadingDeleteProviderBid } =
+    api.providerBid.delete.useMutation({
+      onSuccess: () => {
+        setDeleteModalOpen(false);
+        utils.provider.getProviderBids.invalidate({
+          id: Number(providerBid.providerId),
+        });
+      },
+    });
+
   return (
     <Layout.Section>
       <Card>
         <BlockStack gap="025">
           <InlineGrid columns="1fr auto" alignItems="center">
             <Text id="providerTitle" variant="headingMd" as="h3">
-              Bid for {providerBid.leadCode} - {providerBid.amountGBP} GBP{" "}
-              <Info size={12} />
+              Bid for {providerBid.leadCode} - {providerBid.amountGBP} GBP
             </Text>
 
             <ButtonGroup>
-              <Button variant="monochromePlain">Edit</Button>
-              <Button tone="critical" variant="plain">
+              <Link
+                href={`/admin/providers/${providerBid.providerId}/bid/${providerBid.id}/edit`}
+              >
+                <Button variant="monochromePlain">Edit</Button>
+              </Link>
+              <Button
+                tone="critical"
+                variant="plain"
+                onClick={() => setDeleteModalOpen(true)}
+              >
                 Delete
               </Button>
               <Button
@@ -78,6 +99,30 @@ export default function ProviderBidTable({
           label: `Bid for ${providerBid.leadCode}`,
         }}
       />
+
+      <Modal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        title="Are you sure you want to delete this provider bid?"
+        primaryAction={{
+          content: "Delete",
+          destructive: true,
+          onAction: () => {
+            deleteProviderBid({ providerBidId: Number(providerBid.id) });
+          },
+          loading: isLoadingDeleteProviderBid,
+        }}
+        secondaryActions={[
+          {
+            content: "Cancel",
+            onAction: () => setDeleteModalOpen(false),
+          },
+        ]}
+      >
+        <Modal.Section>
+          <p>This action cannot be undone.</p>
+        </Modal.Section>
+      </Modal>
     </Layout.Section>
   );
 }

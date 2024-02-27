@@ -39,6 +39,7 @@ export const leadCodeValues = [
 export const leadCode = pgEnum("lead_code", leadCodeValues);
 export const LeadCodeValuesEnum = z.enum(leadCode.enumValues).Enum;
 export type LeadCode = typeof LeadCodeValuesEnum;
+
 export const industry = createTable("industry", {
   id: serial("id").primaryKey().notNull(),
   label: varchar("label", { length: 256 }).notNull().unique(),
@@ -130,6 +131,10 @@ export const providerBid = createTable(
     unq: unique().on(t.leadCode, t.providerId),
   }),
 );
+
+export const insertProviderBidSchema = createInsertSchema(providerBid, {
+  amountGBP: z.coerce.number().min(0),
+});
 
 export const leadProviderConnection = createTable(
   "lead_provider_connection",
