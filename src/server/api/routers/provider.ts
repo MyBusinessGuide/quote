@@ -105,6 +105,7 @@ export const providerRouter = createTRPCRouter({
           date: leadProviderConnection.dateCreated,
           officerName: users.name,
           leadCode: leadProviderConnection.leadCode,
+          leadId: lead.id,
         })
         .from(leadProviderConnection)
         .leftJoin(
