@@ -48,7 +48,7 @@ export default function ProviderForm({
   });
 
   return (
-    <Page backAction={{ url: "" }} title={pageTitle}>
+    <Page backAction={{ url: backUrl }} title={pageTitle}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormLayout>
           <Controller

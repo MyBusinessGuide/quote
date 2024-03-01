@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { and, desc, eq, max, not } from "drizzle-orm";
 import { z } from "zod";
 import { sendEmail } from "~/lib/email";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import {
   LeadCodeValuesEnum,
   lead,
@@ -79,7 +83,7 @@ export const leadRouter = createTRPCRouter({
         .where(eq(users.email, input.email))
         .limit(1);
 
-      let userId: number;
+      let userId: string;
       if (foundUsers.length === 0) {
         userId =
           (
@@ -91,9 +95,9 @@ export const leadRouter = createTRPCRouter({
                 name: input.fullName,
               })
               .returning({ id: users.id })
-          )[0]?.id || 1;
+          )[0]?.id || "-1";
       } else {
-        userId = foundUsers[0]?.id ?? 1;
+        userId = foundUsers[0]?.id ?? "-1";
       }
 
       const leadCode = await categorizeUser(
@@ -171,7 +175,7 @@ export const leadRouter = createTRPCRouter({
 
       return { error: null };
     }),
-  connectProviderBid: publicProcedure
+  connectProviderBid: protectedProcedure
     .input(z.object({ leadId: z.number(), providerBidId: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const pBid = await ctx.db
@@ -192,17 +196,34 @@ export const leadRouter = createTRPCRouter({
         leadCode: pBid[0]!.leadCode,
       });
     }),
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select()
       .from(lead)
       .innerJoin(users, eq(lead.userId, users.id));
   }),
-  get: publicProcedure
+  get: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const l = await ctx.db
-        .select()
+        .select({
+          lead: {
+            companyName: lead.companyName,
+            annualTurnoverGBPId: lead.annualTurnoverGBPId,
+            industryId: lead.industryId,
+            tenureYrsId: lead.tenureYrsId,
+            address: lead.address,
+            postalCode: lead.postalCode,
+            companyType: lead.companyType,
+            companyStatus: lead.companyStatus,
+            leadCode: lead.leadCode,
+          },
+          user: {
+            name: users.name,
+            email: users.email,
+            phoneNumber: users.phoneNumber,
+          },
+        })
         .from(lead)
         .innerJoin(users, eq(lead.userId, users.id))
         .where(eq(lead.id, input.id))
@@ -213,7 +234,7 @@ export const leadRouter = createTRPCRouter({
 
       return l[0]!;
     }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(
       z.object({
         id: z.number(),

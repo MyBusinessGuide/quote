@@ -10,7 +10,7 @@ import {
   Box,
 } from "@shopify/polaris";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { api } from "~/trpc/react";
 
 type ProviderParams = { params: { leadId: string } };

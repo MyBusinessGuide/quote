@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { endOfMonth, startOfMonth } from "date-fns";
 import { and, desc, eq, gte, lte } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import {
   insertProviderSchema,
   lead,
@@ -13,7 +17,7 @@ import {
 } from "~/server/db/schema";
 
 export const providerRouter = createTRPCRouter({
-  get: publicProcedure
+  get: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -30,7 +34,7 @@ export const providerRouter = createTRPCRouter({
 
       return data[0]!;
     }),
-  edit: publicProcedure
+  edit: protectedProcedure
     .input(insertProviderSchema.merge(z.object({ id: z.number() })))
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db
@@ -47,17 +51,17 @@ export const providerRouter = createTRPCRouter({
 
       return data[0]!;
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(insertProviderSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.insert(providers).values(input).returning();
 
       return data[0]!;
     }),
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.select().from(providers);
   }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db
@@ -65,7 +69,7 @@ export const providerRouter = createTRPCRouter({
         .where(eq(providers.id, input.id))
         .returning();
     }),
-  getProviderBids: publicProcedure
+  getProviderBids: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const providerBids = await ctx.db
@@ -94,14 +98,14 @@ export const providerRouter = createTRPCRouter({
 
       return response;
     }),
-  getReport: publicProcedure
+  getReport: protectedProcedure
     .input(z.object({ providerId: z.number(), date: z.date().optional() }))
     .query(async ({ ctx, input }) => {
       return ctx.db
         .select({
           id: leadProviderConnection.id,
           companyName: lead.companyName,
-          amountGBP: providerBid.amountGBP,
+          amountGBP: leadProviderConnection.amountGBP,
           date: leadProviderConnection.dateCreated,
           officerName: users.name,
           leadCode: leadProviderConnection.leadCode,

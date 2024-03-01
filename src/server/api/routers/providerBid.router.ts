@@ -1,6 +1,10 @@
 import { and, eq, is, isNull, ne, or } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import {
   leadCode,
   leadProviderConnection,
@@ -8,7 +12,7 @@ import {
 } from "~/server/db/schema";
 
 export const providerBidRouter = createTRPCRouter({
-  getAllWhereProvider: publicProcedure
+  getAllWhereProvider: protectedProcedure
     .input(
       z.object({
         providerId: z.number(),
@@ -56,7 +60,7 @@ export const providerBidRouter = createTRPCRouter({
       )[0];
     }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         amountGBP: z.number(),
@@ -68,7 +72,7 @@ export const providerBidRouter = createTRPCRouter({
       return await ctx.db.insert(providerBid).values(input);
     }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         providerBidId: z.number(),
@@ -84,7 +88,7 @@ export const providerBidRouter = createTRPCRouter({
         .where(eq(providerBid.id, providerBidId));
     }),
 
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(
       z.object({
         providerBidId: z.number(),
