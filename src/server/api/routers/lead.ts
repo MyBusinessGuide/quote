@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, max, not } from "drizzle-orm";
+import { and, asc, desc, eq, max, not } from "drizzle-orm";
 import { z } from "zod";
 import { sendEmail } from "~/lib/email";
 import {
@@ -12,6 +12,7 @@ import {
   lead,
   leadProviderConnection,
   providerBid,
+  providers,
   users,
 } from "~/server/db/schema";
 import ProviderConnectionEmail from "../../../../emails/ProviderConnectedLead.email";
@@ -137,10 +138,13 @@ export const leadRouter = createTRPCRouter({
           amount_gbp: max(providerBid.amountGBP),
         })
         .from(providerBid)
+        .innerJoin(providers, eq(providerBid.providerId, providers.id))
         .where(eq(providerBid.leadCode, leadCode))
-        .groupBy(providerBid.id)
-        .orderBy(desc(providerBid.amountGBP))
+        .groupBy(providerBid.id, providers.priority)
+        .orderBy(asc(providers.priority), desc(providerBid.amountGBP))
         .limit(1);
+
+      console.log(maxProviderBid);
 
       if (maxProviderBid.length === 0) {
         return { error: "No provider found" } as const;

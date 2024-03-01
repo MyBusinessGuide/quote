@@ -33,6 +33,7 @@ export default function ProviderEditPage({
         maxMonthlyBudgetGBP: data.maxMonthlyBudgetGBP,
         leadDeliveryMethod: data.leadDeliveryMethod,
         fcaNumber: data.fcaNumber,
+        priority: data.priority,
       }}
       onSubmit={(values) => editProvider({ ...values, id: Number(providerId) })}
       pageTitle={`Edit - ${data.companyName}`}

@@ -104,6 +104,10 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
                   term: "FCA Number",
                   description: data.fcaNumber,
                 },
+                {
+                  term: "Priority",
+                  description: data.priority,
+                },
               ]}
             />
           </Card>

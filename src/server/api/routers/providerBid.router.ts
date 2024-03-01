@@ -45,7 +45,7 @@ export const providerBidRouter = createTRPCRouter({
         )
         .groupBy(providerBid.id);
     }),
-  get: publicProcedure
+  get: protectedProcedure
     .input(
       z.object({
         id: z.number(),

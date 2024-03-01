@@ -14,11 +14,17 @@ import { z } from "zod";
 import {
   insertProviderSchema,
   leadDeliveryMethodValues,
+  providerPriorityValues,
 } from "~/server/db/schema";
 
 const leadDeliveryMethodOptions = leadDeliveryMethodValues.map((method) => ({
   label: method,
   value: method,
+}));
+
+const providerPriorityOptions = providerPriorityValues.map((priority) => ({
+  label: priority,
+  value: priority,
 }));
 
 type ProviderEditValues = z.infer<typeof insertProviderSchema>;
@@ -179,6 +185,23 @@ export default function ProviderForm({
               );
             }}
           />
+
+          <Controller
+            name="priority"
+            control={control}
+            render={({ field }) => {
+              const { ref, ...rest } = field;
+              return (
+                <Select
+                  label="Priority"
+                  options={providerPriorityOptions}
+                  {...rest}
+                  error={errors.priority?.message}
+                />
+              );
+            }}
+          />
+
           <Controller
             name="fcaNumber"
             control={control}

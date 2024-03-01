@@ -109,6 +109,15 @@ export const LeadDeliveryMethodEnum = z.enum(
   leadDeliveryMethod.enumValues,
 ).Enum;
 
+export const providerPriorityValues = ["priority_1", "priority_2"] as const;
+
+export const providerPriority = pgEnum(
+  "provider_priority",
+  providerPriorityValues,
+);
+
+export const ProviderPriorityEnum = z.enum(providerPriority.enumValues).Enum;
+
 export const providers = createTable("provider", {
   id: serial("id").primaryKey().notNull(),
   companyName: text("company_name").notNull(),
@@ -120,6 +129,7 @@ export const providers = createTable("provider", {
   maxMonthlyBudgetGBP: integer("max_monthly_budget_gbp").notNull(),
   leadDeliveryMethod: leadDeliveryMethod("lead_delivery_method").notNull(),
   fcaNumber: varchar("fca_number", { length: 256 }),
+  priority: providerPriority("priority").notNull().default("priority_1"),
   // - payment_terms
   // - service
 });
