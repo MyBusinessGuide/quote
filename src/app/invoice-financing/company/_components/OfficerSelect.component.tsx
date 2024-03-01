@@ -1,4 +1,5 @@
 "use client";
+import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import Button from "~/app/_components/Button.component";
@@ -28,9 +29,17 @@ export default function OfficerSelect() {
 
   const officers: CompanyListItemProps[] =
     dataOfficers?.map((officer, index) => {
+      console.log(officer.date_of_birth);
       const subtitle =
         officer.date_of_birth?.month && officer.date_of_birth.year
-          ? `${officer.date_of_birth?.month}/${officer.date_of_birth?.year}`
+          ? format(
+              new Date(
+                officer.date_of_birth.year,
+                officer.date_of_birth.month,
+                1,
+              ),
+              "MM/yyyy",
+            )
           : "";
 
       return {

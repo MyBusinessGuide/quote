@@ -26,7 +26,7 @@ export default function Company() {
       <Input
         id={"company-name"}
         label={"Company name"}
-        placeholder="James Gaming Company"
+        placeholder="The Food Group"
         value={query}
         onChange={onSearch}
         className="mb-6"

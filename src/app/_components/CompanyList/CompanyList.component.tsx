@@ -36,7 +36,7 @@ export default function CompanyList({
     );
 
   if (items.length === 0)
-    return <div className="text-center">No items found</div>;
+    return <div className="text-center">No results found</div>;
 
   return (
     <ul className={cn("max-h-[30vh] overflow-y-auto", className)}>
