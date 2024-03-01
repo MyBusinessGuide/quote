@@ -60,7 +60,7 @@ export default function ConnectLeadToProvider({
     );
 
   const { mutate: connect, isLoading: isLoadingConnect } =
-    api.lead.connect.useMutation({
+    api.lead.connectProviderBid.useMutation({
       onSuccess: () => {
         router.push(`/admin/leads/${leadId}`);
       },

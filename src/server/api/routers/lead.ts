@@ -127,7 +127,7 @@ export const leadRouter = createTRPCRouter({
         return { error: "Lead not inserted" } as const;
       }
 
-      const maxProvider = await ctx.db
+      const maxProviderBid = await ctx.db
         .select({
           id: providerBid.id,
           amount_gbp: max(providerBid.amountGBP),
@@ -138,13 +138,15 @@ export const leadRouter = createTRPCRouter({
         .orderBy(desc(providerBid.amountGBP))
         .limit(1);
 
-      if (maxProvider.length === 0) {
+      if (maxProviderBid.length === 0) {
         return { error: "No provider found" } as const;
       }
 
       await ctx.db.insert(leadProviderConnection).values({
         leadId: insertedLead[0]!.id,
-        providerBidId: maxProvider[0]!.id,
+        providerBidId: maxProviderBid[0]!.id,
+        amountGBP: maxProviderBid[0]!.amount_gbp || 0,
+        leadCode: insertedLead[0]!.leadCode,
       });
 
       sendEmail({
@@ -155,7 +157,7 @@ export const leadRouter = createTRPCRouter({
             providerName: "Provider",
             fullName: input.fullName,
             quoteDate: new Date().toDateString(),
-            loanAmount: "£" + maxProvider[0]!.amount_gbp,
+            loanAmount: "£" + maxProviderBid[0]!.amount_gbp,
             turnover: input.annualTurnoverGBPId.toString(),
             tenure: input.tenureYrsId.toString(),
             industry: input.industryId.toString(),
@@ -172,7 +174,23 @@ export const leadRouter = createTRPCRouter({
   connectProviderBid: publicProcedure
     .input(z.object({ leadId: z.number(), providerBidId: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.insert(leadProviderConnection).values(input);
+      const pBid = await ctx.db
+        .select()
+        .from(providerBid)
+        .where(eq(providerBid.id, input.providerBidId))
+        .limit(1);
+
+      if (!pBid || !pBid[0])
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Provider bid not found",
+        });
+
+      await ctx.db.insert(leadProviderConnection).values({
+        ...input,
+        amountGBP: pBid[0]!.amountGBP,
+        leadCode: pBid[0]!.leadCode,
+      });
     }),
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db
@@ -203,18 +221,5 @@ export const leadRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input: { id } }) => {
       return await ctx.db.delete(lead).where(eq(lead.id, id));
-    }),
-  connect: publicProcedure
-    .input(
-      z.object({
-        leadId: z.number(),
-        providerBidId: z.number(),
-      }),
-    )
-    .mutation(async ({ ctx, input: { leadId, providerBidId } }) => {
-      return await ctx.db.insert(leadProviderConnection).values({
-        leadId,
-        providerBidId,
-      });
     }),
 });

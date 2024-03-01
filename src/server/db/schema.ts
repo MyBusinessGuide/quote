@@ -6,11 +6,13 @@ import {
   pgTableCreator,
   serial,
   text,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
+import { sql } from "drizzle-orm";
 
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
 
@@ -146,6 +148,9 @@ export const leadProviderConnection = createTable(
     providerBidId: integer("provider_bid_id")
       .notNull()
       .references(() => providerBid.id),
+    leadCode: leadCode("lead_code").notNull(),
+    amountGBP: integer("amount_gbp").notNull(),
+    dateCreated: timestamp("date_created").defaultNow(),
   },
   (t) => ({
     unq: unique().on(t.leadId, t.providerBidId),

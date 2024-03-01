@@ -18,6 +18,8 @@ import { Suspense, useState } from "react";
 import { api } from "~/trpc/react";
 import ProviderBids from "./_components/ProviderBids.component";
 import Link from "next/link";
+import ReportTable from "./_components/ReportTable.component";
+import ReportTableCard from "./_components/ReportTableCard.component";
 
 type ProviderParams = { params: { providerId: string } };
 
@@ -128,6 +130,16 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
         <Suspense fallback={<Layout.Section>Loading...</Layout.Section>}>
           <ProviderBids providerId={Number(providerId)} />
         </Suspense>
+
+        <Layout.Section>
+          <BlockStack gap="025">
+            <Text id="storeDetails" variant="headingMd" as="h2">
+              Report
+            </Text>
+          </BlockStack>
+        </Layout.Section>
+
+        <ReportTableCard providerId={providerId} />
       </Layout>
       <Modal
         open={deleteModalOpen}
@@ -153,7 +165,7 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
         </Modal.Section>
       </Modal>
 
-      <Box paddingBlock="400" />
+      <Box paddingBlock="1000" />
     </Page>
   );
 }

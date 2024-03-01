@@ -23,8 +23,6 @@ export default function ProviderBidTable({
   leads,
   providerBid,
 }: ProviderBidTableProps) {
-  const [connectProviderBidLeadOpen, setConnectProviderBidLeadOpen] =
-    useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const utils = api.useUtils();
   const { mutate: deleteProviderBid, isLoading: isLoadingDeleteProviderBid } =
@@ -58,12 +56,6 @@ export default function ProviderBidTable({
                 onClick={() => setDeleteModalOpen(true)}
               >
                 Delete
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => setConnectProviderBidLeadOpen(true)}
-              >
-                Connect lead
               </Button>
             </ButtonGroup>
           </InlineGrid>
