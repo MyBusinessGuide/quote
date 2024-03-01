@@ -169,33 +169,6 @@ export const leadRouter = createTRPCRouter({
 
       return { error: null };
     }),
-  getWhereLeadId: publicProcedure
-    .input(
-      z.object({
-        leadCode: z.nativeEnum(LeadCodeValuesEnum),
-        providerBidId: z.number(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      return await ctx.db
-        .select({
-          id: lead.id,
-          companyName: lead.companyName,
-          fullName: users.name,
-        })
-        .from(lead)
-        .innerJoin(users, eq(lead.userId, users.id))
-        .innerJoin(
-          leadProviderConnection,
-          eq(leadProviderConnection.leadId, lead.id),
-        )
-        .where(
-          and(
-            eq(lead.leadCode, input.leadCode),
-            not(eq(leadProviderConnection.providerBidId, input.providerBidId)),
-          ),
-        );
-    }),
   connectProviderBid: publicProcedure
     .input(z.object({ leadId: z.number(), providerBidId: z.number() }))
     .mutation(async ({ ctx, input }) => {
@@ -230,5 +203,18 @@ export const leadRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input: { id } }) => {
       return await ctx.db.delete(lead).where(eq(lead.id, id));
+    }),
+  connect: publicProcedure
+    .input(
+      z.object({
+        leadId: z.number(),
+        providerBidId: z.number(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { leadId, providerBidId } }) => {
+      return await ctx.db.insert(leadProviderConnection).values({
+        leadId,
+        providerBidId,
+      });
     }),
 });

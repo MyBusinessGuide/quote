@@ -1,9 +1,46 @@
-import { eq } from "drizzle-orm";
+import { and, eq, is, isNull, ne, or } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { leadCode, providerBid } from "~/server/db/schema";
+import {
+  leadCode,
+  leadProviderConnection,
+  providerBid,
+} from "~/server/db/schema";
 
 export const providerBidRouter = createTRPCRouter({
+  getAllWhereProvider: publicProcedure
+    .input(
+      z.object({
+        providerId: z.number(),
+        leadId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db
+        .select({
+          id: providerBid.id,
+          amountGBP: providerBid.amountGBP,
+          leadCode: providerBid.leadCode,
+        })
+        .from(providerBid)
+        .leftJoin(
+          leadProviderConnection,
+          and(
+            eq(leadProviderConnection.providerBidId, providerBid.id),
+            eq(leadProviderConnection.leadId, input.leadId),
+          ),
+        )
+        .where(
+          and(
+            eq(providerBid.providerId, input.providerId),
+            or(
+              ne(leadProviderConnection.leadId, input.leadId),
+              isNull(leadProviderConnection.leadId),
+            ),
+          ),
+        )
+        .groupBy(providerBid.id);
+    }),
   get: publicProcedure
     .input(
       z.object({

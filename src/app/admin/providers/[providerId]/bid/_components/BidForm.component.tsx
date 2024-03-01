@@ -70,7 +70,7 @@ export default function BidForm({
               const { ref, ...rest } = field;
               return (
                 <Select
-                  label="Lead delivery method"
+                  label="Lead code"
                   options={leadCodeValues.map((leadCode) => ({
                     label: leadCode,
                     value: leadCode,

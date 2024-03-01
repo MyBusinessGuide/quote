@@ -10,7 +10,6 @@ import {
   Box,
   Modal,
 } from "@shopify/polaris";
-import ConnectProviderLeadModal from "./ConnectProviderLeadModal.component";
 import { api as apiServer } from "~/trpc/server";
 import { useState } from "react";
 import Link from "next/link";
@@ -90,15 +89,6 @@ export default function ProviderBidTable({
           </Box>
         )}
       </Card>
-      <ConnectProviderLeadModal
-        open={connectProviderBidLeadOpen}
-        onClose={() => setConnectProviderBidLeadOpen(false)}
-        leadCode={providerBid.leadCode}
-        providerBid={{
-          id: providerBid.id,
-          label: `Bid for ${providerBid.leadCode}`,
-        }}
-      />
 
       <Modal
         open={deleteModalOpen}
