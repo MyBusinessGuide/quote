@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Ba Ba Bills",
+  title: "My Business Guide",
   description: "Connecting SMEs with the best providers in the market.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
