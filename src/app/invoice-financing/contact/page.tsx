@@ -47,7 +47,7 @@ export default function Contact() {
       if (!error) {
         navigate.push("thank-you");
       } else if (error === "No provider found") {
-        navigate.push("no-provider");
+        navigate.push("pending");
       } else {
         navigate.push("error");
       }

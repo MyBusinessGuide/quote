@@ -6,7 +6,9 @@ import { CompanyListItemProps } from "~/app/_components/CompanyList/CompanyListI
 import { api } from "~/trpc/react";
 import { intervalToDuration } from "date-fns";
 import { sendGTMEvent } from "@next/third-parties/google";
-import useInvoiceFinancing, { PageEnum } from "~/app/_hooks/useInvoiceFinancing";
+import useInvoiceFinancing, {
+  PageEnum,
+} from "~/app/_hooks/useInvoiceFinancing";
 
 type CompanySearchProps = {
   query: string;
@@ -98,10 +100,28 @@ export default function CompanySearch({ query }: CompanySearchProps) {
             value: "invoice_finance_company_not_there",
           });
           setInvoiceFinancingState("companyName", query);
+          setInvoiceFinancingState("companyType", "registered");
           navigate.push("tenure");
         }}
       >
         Not there?
+      </Button>
+
+      <Button
+        disabled={!query}
+        variant={"outline"}
+        onClick={() => {
+          sendGTMEvent({
+            event: "invoice_finance_company_sole_trader",
+            value: "invoice_finance_company_sole_trader",
+          });
+          setInvoiceFinancingState("companyName", query);
+          setInvoiceFinancingState("companyType", "sole_trader");
+          navigate.push("tenure");
+        }}
+        fullWidth
+      >
+        Sole trader
       </Button>
     </>
   );
