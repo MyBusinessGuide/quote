@@ -75,7 +75,12 @@ export default function AdminLayout({
                   actions={[
                     {
                       items: [
-                        { content: "Log out", onAction: () => signOut() },
+                        {
+                          content: "Log out",
+                          onAction: async () => {
+                            await signOut();
+                          },
+                        },
                       ],
                     },
                   ]}

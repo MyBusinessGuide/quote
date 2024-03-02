@@ -27,9 +27,9 @@ export default function ProviderBidTable({
   const utils = api.useUtils();
   const { mutate: deleteProviderBid, isLoading: isLoadingDeleteProviderBid } =
     api.providerBid.delete.useMutation({
-      onSuccess: () => {
+      onSuccess: async () => {
         setDeleteModalOpen(false);
-        utils.provider.getProviderBids.invalidate({
+        await utils.provider.getProviderBids.invalidate({
           id: Number(providerBid.providerId),
         });
       },
@@ -73,7 +73,9 @@ export default function ProviderBidTable({
                   rows={leads.map((lead) => [
                     lead.companyName,
                     lead.amountGBP || "ERROR", // replace
-                    <Button variant="plain">View</Button>,
+                    <Button key={lead.id} variant="plain">
+                      View
+                    </Button>,
                   ])}
                 />
               </Card>

@@ -12,9 +12,9 @@ export default function BidCreatePage({
   const utils = api.useUtils();
   const { mutate: createProviderBid, isLoading } =
     api.providerBid.create.useMutation({
-      onSuccess: () => {
+      onSuccess: async () => {
         router.push(`/admin/providers/${providerId}`);
-        utils.provider.getProviderBids.invalidate({
+        await utils.provider.getProviderBids.invalidate({
           id: Number(providerId),
         });
       },

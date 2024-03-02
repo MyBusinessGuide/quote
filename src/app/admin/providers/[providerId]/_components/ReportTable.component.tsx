@@ -21,7 +21,7 @@ export default function ReportTable({ providerId, date }: ReportTableProps) {
             row.date ? format(row.date, "dd/MM/yyyy") : "no-date",
             row.leadCode,
             row.amountGBP,
-            <Link href={`/admin/leads/${row.leadId}`}>
+            <Link key={row.id} href={`/admin/leads/${row.leadId}`}>
               <Button variant="plain">View</Button>
             </Link>,
           ];

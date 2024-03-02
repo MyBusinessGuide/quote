@@ -21,9 +21,9 @@ export default function Provider({ params: { leadId } }: ProviderParams) {
   const utils = api.useUtils();
   const { mutate: deleteLead, isLoading: isLoadingDeleteLead } =
     api.lead.delete.useMutation({
-      onSuccess: () => {
+      onSuccess: async () => {
         router.push("/admin/leads");
-        utils.lead.getAll.invalidate();
+        await utils.lead.getAll.invalidate();
       },
     });
   const [data] = api.lead.get.useSuspenseQuery(

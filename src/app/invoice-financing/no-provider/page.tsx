@@ -9,7 +9,7 @@ export default async function NoProvider() {
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <h2 className="text-xl">No provider found!</h2>
         <p className="text-center">
-          Unfortunately, we couldn't find a provider for you.
+          Unfortunately, we couldn&apos;t find a provider for you.
         </p>
         <Link href="turnover" className="w-full">
           <Button variant="outline" fullWidth className="mt-8">

@@ -16,6 +16,8 @@ export default function ProviderBids({ providerId }: ProviderBidsProps) {
   }
 
   return providerBids.map((providerBid) => {
-    return <ProviderBidTable {...providerBid} />;
+    return (
+      <ProviderBidTable key={providerBid.providerBid.id} {...providerBid} />
+    );
   });
 }

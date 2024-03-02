@@ -178,7 +178,7 @@ export const leadRouter = createTRPCRouter({
         .where(eq(providerBid.id, input.providerBidId))
         .limit(1);
 
-      if (!pBid || !pBid[0])
+      if (!pBid?.length)
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Provider bid not found",
@@ -267,7 +267,7 @@ export const leadRouter = createTRPCRouter({
         .where(eq(lead.id, input.id))
         .limit(1);
 
-      if (!l || !l[0])
+      if (!l?.length)
         throw new TRPCError({ code: "NOT_FOUND", message: "Lead not found" });
 
       return l[0]!;
