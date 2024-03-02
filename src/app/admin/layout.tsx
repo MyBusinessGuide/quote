@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { api } from "~/trpc/react";
 
 const inter = Inter({
   subsets: ["latin"],

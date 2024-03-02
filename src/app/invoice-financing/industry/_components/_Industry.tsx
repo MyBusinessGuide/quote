@@ -3,8 +3,10 @@ import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
-import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 import { sendGTMEvent } from "@next/third-parties/google";
+import useInvoiceFinancing, {
+  PageEnum,
+} from "~/app/_hooks/useInvoiceFinancing";
 
 type IndustryProps = {
   initialData: Awaited<ReturnType<typeof apiServer.industry.getAll.query>>;
@@ -18,7 +20,9 @@ export default function Industry({ initialData }: IndustryProps) {
     refetchOnReconnect: false,
   });
 
-  const { values, setValue } = useInvoiceFinancing();
+  const { data: values, setData: setValue } = useInvoiceFinancing(
+    PageEnum.Industry,
+  );
 
   const onValueChange = (value: string) => {
     setValue("industryId", Number(value));

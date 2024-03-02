@@ -3,18 +3,18 @@ import { useRouter } from "next/navigation";
 import Button from "~/app/_components/Button.component";
 import CompanyList from "~/app/_components/CompanyList/CompanyList.component";
 import { CompanyListItemProps } from "~/app/_components/CompanyList/CompanyListItem.component";
-import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 import { api } from "~/trpc/react";
 import { intervalToDuration } from "date-fns";
 import { sendGTMEvent } from "@next/third-parties/google";
+import useInvoiceFinancing, { PageEnum } from "~/app/_hooks/useInvoiceFinancing";
 
 type CompanySearchProps = {
   query: string;
 };
 
 export default function CompanySearch({ query }: CompanySearchProps) {
-  const { values: invoiceFinancingState, setValue: setInvoiceFinancingState } =
-    useInvoiceFinancing();
+  const { data: invoiceFinancingState, setData: setInvoiceFinancingState } =
+    useInvoiceFinancing(PageEnum.Company);
 
   const navigate = useRouter();
 

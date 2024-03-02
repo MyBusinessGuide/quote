@@ -1,61 +1,43 @@
 import { useEffect } from "react";
 import {
   InvoiceFinancingValues,
-  invoiceFinancingDefaultValues,
-  invoiceFinancingValuesSchema,
   useInvoiceFinancingState,
 } from "../_state/invoiceFinancingStore";
+import { useRouter } from "next/navigation";
 
-export default function useInvoiceFinancing() {
-  const { data, setData, setAllData, set } = useInvoiceFinancingState();
+export enum PageEnum {
+  Company = "company",
+  Turnover = "turnover",
+  Industry = "industry",
+  Tenure = "tenure",
+  Contact = "contact",
+}
+
+type Requirements = { [key in PageEnum]: (keyof InvoiceFinancingValues)[] };
+
+const requirements: Requirements = {
+  [PageEnum.Turnover]: [],
+  [PageEnum.Industry]: ["turnoverId"],
+  [PageEnum.Company]: ["turnoverId", "industryId"],
+  [PageEnum.Tenure]: ["turnoverId", "industryId", "companyName"],
+  [PageEnum.Contact]: ["turnoverId", "industryId", "companyName", "tenureId"],
+};
+
+export default function useInvoiceFinancing(currentPage: PageEnum) {
+  const state = useInvoiceFinancingState();
+  const router = useRouter();
 
   useEffect(() => {
-    const localStorageData = localStorage.getItem("invoice-financing");
-    if (!localStorageData)
-      localStorage.setItem(
-        "invoice-financing",
-        JSON.stringify(invoiceFinancingDefaultValues),
-      );
-    else
-      try {
-        setAllData(
-          invoiceFinancingValuesSchema.parse(JSON.parse(localStorageData)),
-        );
-      } catch (error) {
-        localStorage.setItem(
-          "invoice-financing",
-          JSON.stringify(invoiceFinancingDefaultValues),
-        );
-      }
+    const requiredFields = requirements[currentPage];
+    const isMissingRequiredFields = requiredFields.some(
+      (field) => !state.data[field],
+    );
+
+    if (isMissingRequiredFields) {
+      state.clear();
+      router.push("/invoice-financing/turnover");
+    }
   }, []);
 
-  function setValue<
-    Key extends keyof InvoiceFinancingValues,
-    Value extends InvoiceFinancingValues[Key],
-  >(key: Key, value: Value) {
-    // set used to get the correct previous state
-    set((prev) => {
-      localStorage.setItem(
-        "invoice-financing",
-        JSON.stringify({ ...prev.data, [key]: value }),
-      );
-      return prev;
-    });
-    setData(key, value);
-    return;
-  }
-
-  const clear = () => {
-    setAllData(invoiceFinancingDefaultValues);
-    localStorage.setItem(
-      "invoice-financing",
-      JSON.stringify(invoiceFinancingDefaultValues),
-    );
-  };
-
-  return {
-    values: data,
-    setValue,
-    clear,
-  };
+  return state;
 }

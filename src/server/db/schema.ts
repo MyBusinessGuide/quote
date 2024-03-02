@@ -77,8 +77,8 @@ export const lead = createTable("lead", {
   industryId: integer("industry_id").references(() => industry.id),
   tenureYrsId: integer("tenure_yrs_id").references(() => tenure_yrs.id),
   amountGBP: integer("amount_gbp"),
-  companyStatus: varchar("company_status", { length: 256 }),
   address: varchar("address", { length: 256 }),
+  companyStatus: varchar("company_status", { length: 256 }),
   postalCode: varchar("postal_code", { length: 256 }),
   companyType: varchar("company_type", { length: 256 }),
   leadCode: leadCode("lead_code").notNull(),
@@ -91,6 +91,7 @@ export const users = createTable("user", {
     .$defaultFn(() => randomUUID()),
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
+  role: varchar("role", { length: 100 }).notNull().default("user"),
   phoneNumber: varchar("phone_number", { length: 255 }),
   emailVerified: timestamp("emailVerified", {
     mode: "date",

@@ -50,6 +50,7 @@ type UseInvoiceFinancingState = {
         ) => UseInvoiceFinancingState | Partial<UseInvoiceFinancingState>),
     replace?: boolean | undefined,
   ) => void;
+  clear: () => void;
 };
 
 export const useInvoiceFinancingState = create<UseInvoiceFinancingState>(
@@ -59,5 +60,7 @@ export const useInvoiceFinancingState = create<UseInvoiceFinancingState>(
       set((prev) => ({ ...prev, data: { ...prev.data, [key]: value } })),
     setAllData: (values) => set((prev) => ({ ...prev, data: values })),
     set,
+    clear: () =>
+      set((prev) => ({ ...prev, data: invoiceFinancingDefaultValues })),
   }),
 );

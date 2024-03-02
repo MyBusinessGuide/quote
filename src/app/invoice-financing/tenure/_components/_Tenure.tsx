@@ -3,9 +3,10 @@ import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
-import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
-import FlowLayout from "~/app/_components/FlowLayout";
 import { sendGTMEvent } from "@next/third-parties/google";
+import useInvoiceFinancing, {
+  PageEnum,
+} from "~/app/_hooks/useInvoiceFinancing";
 
 type TenureProps = {
   initialData: Awaited<ReturnType<typeof apiServer.tenure.getAll.query>>;
@@ -18,7 +19,9 @@ export default function Tenure({ initialData }: TenureProps) {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const { values, setValue } = useInvoiceFinancing();
+  const { data: values, setData: setValue } = useInvoiceFinancing(
+    PageEnum.Tenure,
+  );
 
   const onValueChange = (value: string) => {
     sendGTMEvent({

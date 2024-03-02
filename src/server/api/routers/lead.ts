@@ -8,7 +8,6 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import {
-  LeadCodeValuesEnum,
   lead,
   leadProviderConnection,
   providerBid,
@@ -143,8 +142,6 @@ export const leadRouter = createTRPCRouter({
         .groupBy(providerBid.id, providers.priority)
         .orderBy(asc(providers.priority), desc(providerBid.amountGBP))
         .limit(1);
-
-      console.log(maxProviderBid);
 
       if (maxProviderBid.length === 0) {
         return { error: "No provider found" } as const;

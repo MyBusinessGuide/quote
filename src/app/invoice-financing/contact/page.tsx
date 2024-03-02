@@ -5,10 +5,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import * as z from "zod";
-import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { sendGTMEvent } from "@next/third-parties/google";
+import useInvoiceFinancing, {
+  PageEnum,
+} from "~/app/_hooks/useInvoiceFinancing";
 
 const inputsSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -24,7 +26,7 @@ const inputsSchema = z.object({
 type Inputs = z.infer<typeof inputsSchema>;
 
 export default function Contact() {
-  const { values, clear } = useInvoiceFinancing();
+  const { data: values, clear } = useInvoiceFinancing(PageEnum.Contact);
   const navigate = useRouter();
 
   const {

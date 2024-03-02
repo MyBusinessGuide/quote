@@ -9,12 +9,14 @@ import CompanyListItem, {
   CompanyListItemProps,
 } from "~/app/_components/CompanyList/CompanyListItem.component";
 import Input from "~/app/_components/Input.component";
-import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
+import useInvoiceFinancing, {
+  PageEnum,
+} from "~/app/_hooks/useInvoiceFinancing";
 import { api } from "~/trpc/react";
 
 export default function OfficerSelect() {
-  const { values: invoiceFinancingState, setValue: setInvoiceFinancingState } =
-    useInvoiceFinancing();
+  const { data: invoiceFinancingState, setData: setInvoiceFinancingState } =
+    useInvoiceFinancing(PageEnum.Company);
   const [nameAvailable, setNameAvailable] = useState(true);
   const [selectedOfficerId, setSelectedOfficerId] = useState<
     string | undefined
@@ -30,7 +32,6 @@ export default function OfficerSelect() {
 
   const officers: CompanyListItemProps[] =
     dataOfficers?.map((officer, index) => {
-      console.log(officer.date_of_birth);
       const subtitle =
         officer.date_of_birth?.month && officer.date_of_birth.year
           ? format(
