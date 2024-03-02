@@ -115,7 +115,9 @@ export default function Contact() {
 
       <p className="text-center">
         By filling out this form you agree to our{" "}
-        <span
+        <a
+          href="http://thebusinessguide.co.uk/customer-terms"
+          target="_blank"
           onClick={() =>
             sendGTMEvent({
               event: "invoice_finance_contact_terms",
@@ -125,9 +127,11 @@ export default function Contact() {
           className="underline"
         >
           terms of business
-        </span>{" "}
+        </a>{" "}
         and our{" "}
-        <span
+        <a
+          href="http://thebusinessguide.co.uk/privacy-policy"
+          target="_blank"
           onClick={() =>
             sendGTMEvent({
               event: "invoice_finance_contact_privacy",
@@ -137,7 +141,7 @@ export default function Contact() {
           className="underline"
         >
           privacy policy
-        </span>
+        </a>
       </p>
 
       <Button
