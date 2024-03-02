@@ -122,6 +122,7 @@ export const leadRouter = createTRPCRouter({
           companyType: input.companyType,
           companyStatus: input.companyStatus,
           leadCode: leadCode,
+          serviceId: 1,
         })
         .returning();
 

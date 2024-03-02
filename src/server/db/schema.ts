@@ -1,6 +1,4 @@
 import {
-  PgColumn,
-  PgTableWithColumns,
   index,
   integer,
   pgEnum,
@@ -19,6 +17,11 @@ import { AdapterAccount } from "next-auth/adapters";
 import { randomUUID } from "crypto";
 
 export const createTable = pgTableCreator((name) => `bababills_${name}`);
+
+export const service = createTable("service", {
+  id: serial("id").primaryKey().notNull(),
+  name: varchar("name", { length: 256 }).notNull().unique(),
+});
 
 export const leadCodeValues = [
   "A1",
@@ -67,6 +70,9 @@ export const tenure_yrs = createTable("tenure_yrs", {
 
 export const lead = createTable("lead", {
   id: serial("id").primaryKey().notNull(),
+  serviceId: integer("service_id")
+    .notNull()
+    .references(() => service.id),
   userId: varchar("user_id", { length: 255 })
     .notNull()
     .references(() => users.id),
@@ -131,8 +137,11 @@ export const providers = createTable("provider", {
   leadDeliveryMethod: leadDeliveryMethod("lead_delivery_method").notNull(),
   fcaNumber: varchar("fca_number", { length: 256 }),
   priority: providerPriority("priority").notNull().default("priority_1"),
+  serviceId: integer("service_id")
+    .notNull()
+    .references(() => service.id)
+    .default(1),
   // - payment_terms
-  // - service
 });
 export const insertProviderSchema = createInsertSchema(providers, {
   maxMonthlyBudgetGBP: z.coerce.number().min(0),

@@ -13,6 +13,7 @@ import {
   leadProviderConnection,
   providerBid,
   providers,
+  service,
   users,
 } from "~/server/db/schema";
 
@@ -21,8 +22,12 @@ export const providerRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db
-        .select()
+        .select({
+          provider: providers,
+          service: service.name,
+        })
         .from(providers)
+        .innerJoin(service, eq(providers.serviceId, service.id))
         .where(eq(providers.id, input.id))
         .limit(1);
 

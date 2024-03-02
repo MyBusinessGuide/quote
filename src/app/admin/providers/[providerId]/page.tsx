@@ -32,7 +32,7 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
         router.push("/admin/providers");
       },
     });
-  const [data] = api.provider.get.useSuspenseQuery(
+  const [{ provider, service }] = api.provider.get.useSuspenseQuery(
     { id: Number(providerId) },
     {
       useErrorBoundary: true,
@@ -42,7 +42,7 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
   return (
     <Page
       backAction={{ content: "Back", url: "/admin/providers" }}
-      title={`Provider - ${data.companyName}`}
+      title={`Provider - ${provider.companyName}`}
       secondaryActions={[
         { content: "Edit", url: `/admin/providers/${providerId}/edit` },
         {
@@ -70,43 +70,47 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
               items={[
                 {
                   term: "Company Name",
-                  description: data.companyName,
+                  description: provider.companyName,
                 },
                 {
                   term: "Company Number",
-                  description: data.companyNumber,
+                  description: provider.companyNumber,
                 },
                 {
                   term: "Contact Name",
-                  description: data.contactName,
+                  description: provider.contactName,
                 },
                 {
                   term: "Email",
-                  description: data.email,
+                  description: provider.email,
                 },
                 {
                   term: "Phone Number",
-                  description: data.phoneNumber,
+                  description: provider.phoneNumber,
                 },
                 {
                   term: "Address",
-                  description: data.address,
+                  description: provider.address,
                 },
                 {
                   term: "Max Monthly Budget (GBP)",
-                  description: data.maxMonthlyBudgetGBP,
+                  description: provider.maxMonthlyBudgetGBP,
                 },
                 {
                   term: "Lead Delivery Method",
-                  description: data.leadDeliveryMethod,
+                  description: provider.leadDeliveryMethod,
                 },
                 {
                   term: "FCA Number",
-                  description: data.fcaNumber,
+                  description: provider.fcaNumber,
                 },
                 {
                   term: "Priority",
-                  description: data.priority,
+                  description: provider.priority,
+                },
+                {
+                  term: "Service",
+                  description: service,
                 },
               ]}
             />
