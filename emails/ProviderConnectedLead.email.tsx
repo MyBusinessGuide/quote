@@ -3,6 +3,8 @@ import { Text } from "@react-email/text";
 import { Section } from "@react-email/section";
 import { Container } from "@react-email/container";
 import { Tailwind } from "@react-email/tailwind";
+import { sendEmail } from "~/lib/email";
+import { render } from "@react-email/render";
 
 type ProviderConnectionEmailProps = {
   providerName: string;
@@ -16,6 +18,23 @@ type ProviderConnectionEmailProps = {
   phoneNumber: string;
   customerEmail: string;
   winningBidAmount: string;
+};
+
+export const sendProviderEmail = ({
+  providerEmail,
+  ...rest
+}: ProviderConnectionEmailProps & { providerEmail: string }) => {
+  console.log("Sending email to provider", providerEmail);
+  sendEmail({
+    to: providerEmail,
+    subject: "[BUSINESS NAME] is looking for Invoice Financing",
+    html: render(
+      ProviderConnectionEmail({
+        ...rest,
+        loanAmount: "£" + rest.loanAmount,
+      }),
+    ),
+  });
 };
 
 export default function ProviderConnectionEmail({

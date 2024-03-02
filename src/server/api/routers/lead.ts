@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, max, not } from "drizzle-orm";
+import { asc, desc, eq, max } from "drizzle-orm";
 import { z } from "zod";
-import { sendEmail } from "~/lib/email";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -14,8 +13,7 @@ import {
   providers,
   users,
 } from "~/server/db/schema";
-import ProviderConnectionEmail from "../../../../emails/ProviderConnectedLead.email";
-import { render } from "@react-email/render";
+import { sendProviderEmail } from "../../../../emails/ProviderConnectedLead.email";
 
 const categorizeUserSchema = z.object({
   tenureYrsId: z.union([
@@ -154,24 +152,19 @@ export const leadRouter = createTRPCRouter({
         leadCode: insertedLead[0]!.leadCode,
       });
 
-      sendEmail({
-        to: input.email,
-        subject: "[BUSINESS NAME] is looking for Invoice Financing",
-        html: render(
-          ProviderConnectionEmail({
-            providerName: "Provider",
-            fullName: input.fullName,
-            quoteDate: new Date().toDateString(),
-            loanAmount: "£" + maxProviderBid[0]!.amount_gbp,
-            turnover: input.annualTurnoverGBPId.toString(),
-            tenure: input.tenureYrsId.toString(),
-            industry: input.industryId.toString(),
-            companyName: input.companyName,
-            phoneNumber: input.phoneNumber,
-            customerEmail: input.email,
-            winningBidAmount: "£123",
-          }),
-        ),
+      sendProviderEmail({
+        providerEmail: input.email,
+        providerName: "Provider",
+        fullName: input.fullName,
+        quoteDate: new Date().toDateString(),
+        loanAmount: "£" + insertedLead[0]!.amountGBP,
+        turnover: input.annualTurnoverGBPId.toString(),
+        tenure: input.tenureYrsId.toString(),
+        industry: input.industryId.toString(),
+        companyName: input.companyName,
+        phoneNumber: input.phoneNumber,
+        customerEmail: input.email,
+        winningBidAmount: "£" + maxProviderBid[0]!.amount_gbp,
       });
 
       return { error: null };
@@ -195,6 +188,38 @@ export const leadRouter = createTRPCRouter({
         ...input,
         amountGBP: pBid[0]!.amountGBP,
         leadCode: pBid[0]!.leadCode,
+      });
+
+      const prov = (
+        await ctx.db
+          .select()
+          .from(providers)
+          .where(eq(providers.id, pBid[0]!.providerId))
+          .limit(1)
+      )[0]!;
+      const insertedLead = (
+        await ctx.db
+          .select()
+          .from(lead)
+          .innerJoin(users, eq(lead.userId, users.id))
+          .where(eq(lead.id, input.leadId))
+          .limit(1)
+      )[0]!;
+
+      sendProviderEmail({
+        providerEmail: prov.email,
+        providerName: prov.companyName,
+        fullName: insertedLead.user.name || "lead_name",
+        quoteDate: new Date().toDateString(),
+        loanAmount: "£" + insertedLead.lead.amountGBP,
+        turnover:
+          insertedLead.lead.annualTurnoverGBPId?.toString() || "turnover",
+        tenure: insertedLead.lead.tenureYrsId?.toString() || "tenure",
+        industry: insertedLead.lead.industryId?.toString() || "industry",
+        companyName: insertedLead.lead.companyName || "company_name",
+        phoneNumber: insertedLead.user.phoneNumber || "phone_number",
+        customerEmail: insertedLead.user.email || "email",
+        winningBidAmount: "£" + pBid[0]!.amountGBP,
       });
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -224,9 +249,21 @@ export const leadRouter = createTRPCRouter({
             email: users.email,
             phoneNumber: users.phoneNumber,
           },
+          provider: {
+            id: providers.id,
+          },
         })
         .from(lead)
         .innerJoin(users, eq(lead.userId, users.id))
+        .leftJoin(
+          leadProviderConnection,
+          eq(leadProviderConnection.leadId, lead.id),
+        )
+        .leftJoin(
+          providerBid,
+          eq(providerBid.id, leadProviderConnection.providerBidId),
+        )
+        .leftJoin(providers, eq(providers.id, providerBid.providerId))
         .where(eq(lead.id, input.id))
         .limit(1);
 

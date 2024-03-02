@@ -1,3 +1,5 @@
+import { render } from "@react-email/render";
+import ProviderConnectionEmail from "emails/ProviderConnectedLead.email";
 import nodemailer from "nodemailer";
 
 type EmailPayload = {

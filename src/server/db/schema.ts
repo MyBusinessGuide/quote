@@ -166,6 +166,7 @@ export const leadProviderConnection = createTable(
     id: serial("id").primaryKey().notNull(),
     leadId: integer("lead_id")
       .notNull()
+      .unique()
       .references(() => lead.id),
     providerBidId: integer("provider_bid_id")
       .notNull()

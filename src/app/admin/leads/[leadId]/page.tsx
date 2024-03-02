@@ -38,8 +38,10 @@ export default function Provider({ params: { leadId } }: ProviderParams) {
       backAction={{ content: "Back", url: "/admin/leads" }}
       title={`Lead - ${data.user.name} from ${data.lead.companyName} - ${data.lead.leadCode}`}
       primaryAction={{
-        content: "Connect with provider",
-        url: `/admin/leads/${leadId}/connect`,
+        content: data.provider ? "View provider" : "Connect with provider",
+        url: data.provider
+          ? `/admin/providers/${data.provider.id}`
+          : `/admin/leads/${leadId}/connect`,
       }}
       secondaryActions={[
         {
