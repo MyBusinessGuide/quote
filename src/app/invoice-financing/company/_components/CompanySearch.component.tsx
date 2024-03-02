@@ -6,6 +6,7 @@ import { CompanyListItemProps } from "~/app/_components/CompanyList/CompanyListI
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 import { api } from "~/trpc/react";
 import { intervalToDuration } from "date-fns";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 type CompanySearchProps = {
   query: string;
@@ -78,7 +79,13 @@ export default function CompanySearch({ query }: CompanySearchProps) {
         isLoading={isLoading}
         items={items}
         selectedId={invoiceFinancingState.companyNumber ?? undefined}
-        onItemClick={onCompanySelect}
+        onItemClick={(value) => {
+          onCompanySelect(value);
+          sendGTMEvent({
+            event: "invoice_finance_company_select",
+            value: "invoice_finance_company_select",
+          });
+        }}
         error={error?.message}
       />
 
@@ -86,6 +93,10 @@ export default function CompanySearch({ query }: CompanySearchProps) {
         variant={"underline"}
         disabled={!query}
         onClick={() => {
+          sendGTMEvent({
+            event: "invoice_finance_company_not_there",
+            value: "invoice_finance_company_not_there",
+          });
           setInvoiceFinancingState("companyName", query);
           navigate.push("tenure");
         }}

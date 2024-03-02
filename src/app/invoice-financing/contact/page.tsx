@@ -8,6 +8,7 @@ import * as z from "zod";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const inputsSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -112,11 +113,41 @@ export default function Contact() {
 
       <p className="text-center">
         By filling out this form you agree to our{" "}
-        <span className="underline">terms of business</span> and our{" "}
-        <span className="underline">privacy policy</span>
+        <span
+          onClick={() =>
+            sendGTMEvent({
+              event: "invoice_finance_contact_terms",
+              value: "invoice_finance_contact_terms",
+            })
+          }
+          className="underline"
+        >
+          terms of business
+        </span>{" "}
+        and our{" "}
+        <span
+          onClick={() =>
+            sendGTMEvent({
+              event: "invoice_finance_contact_privacy",
+              value: "invoice_finance_contact_privacy",
+            })
+          }
+          className="underline"
+        >
+          privacy policy
+        </span>
       </p>
 
-      <Button type="submit" loading={isLoading}>
+      <Button
+        type="submit"
+        onClick={() =>
+          sendGTMEvent({
+            event: "invoice_finance_find_expert",
+            value: "invoice_finance_find_expert",
+          })
+        }
+        loading={isLoading}
+      >
         Find Expert
       </Button>
     </form>

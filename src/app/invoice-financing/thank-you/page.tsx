@@ -1,4 +1,5 @@
-"use server";
+"use client";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { Check } from "lucide-react";
 import Link from "next/link";
 import Button from "~/app/_components/Button.component";
@@ -17,7 +18,17 @@ export default async function ThankYou() {
           They should be in touch shortly.
         </p>
         <Link href="turnover" className="w-full">
-          <Button variant="outline" fullWidth className="mt-8">
+          <Button
+            variant="outline"
+            fullWidth
+            className="mt-8"
+            onClick={() =>
+              sendGTMEvent({
+                event: "invoice_finance_end_quote_done",
+                value: "invoice_finance_end_quote_done",
+              })
+            }
+          >
             Done
           </Button>
         </Link>

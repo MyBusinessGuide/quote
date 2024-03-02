@@ -1,4 +1,5 @@
 "use client";
+import { sendGTMEvent } from "@next/third-parties/google";
 import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
@@ -99,13 +100,23 @@ export default function OfficerSelect() {
             selectedId={(item) =>
               selectedOfficerId ? item.id.startsWith(selectedOfficerId) : false
             }
-            onItemClick={onOfficersSelect}
+            onItemClick={(value) => {
+              onOfficersSelect(value);
+              sendGTMEvent({
+                event: "invoice_finance_director_select",
+                value: "invoice_finance_director_select",
+              });
+            }}
             error={errorOfficers?.message}
             numOfLoadingItems={3}
           />
           <Button
             variant={"underline"}
             onClick={() => {
+              sendGTMEvent({
+                event: "invoice_finance_director_not_there",
+                value: "invoice_finance_director_not_there",
+              });
               setInvoiceFinancingState("fullName", null);
               setNameAvailable(false);
             }}

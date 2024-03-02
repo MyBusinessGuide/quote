@@ -4,6 +4,7 @@ import { api } from "~/trpc/react";
 import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 type IndustryProps = {
   initialData: Awaited<ReturnType<typeof apiServer.industry.getAll.query>>;
@@ -33,7 +34,13 @@ export default function Industry({ initialData }: IndustryProps) {
     return (
       <RadioGroup
         items={items}
-        onValueChange={onValueChange}
+        onValueChange={(value) => {
+          onValueChange(value);
+          sendGTMEvent({
+            event: "invoice_finance_industry",
+            value: "invoice_finance_industry",
+          });
+        }}
         value={values.industryId?.toString()}
       />
     );

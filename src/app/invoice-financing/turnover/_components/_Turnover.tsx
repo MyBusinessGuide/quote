@@ -4,6 +4,7 @@ import { api } from "~/trpc/react";
 import { api as apiServer } from "~/trpc/server";
 import RadioGroup from "~/app/_components/RadioGroup/RadioGroup.component";
 import useInvoiceFinancing from "~/app/_hooks/useInvoiceFinancing";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 type TurnoverProps = {
   initialData: Awaited<
@@ -37,7 +38,13 @@ export default function Turnover({ initialData }: TurnoverProps) {
     return (
       <RadioGroup
         items={items}
-        onValueChange={onValueChange}
+        onValueChange={(value) => {
+          onValueChange(value);
+          sendGTMEvent({
+            event: "invoice_finance_turnover",
+            value: "invoice_finance_turnover",
+          });
+        }}
         value={values.turnoverId?.toString()}
       />
     );
