@@ -10,7 +10,7 @@ export default async function Pending() {
         <h2 className="text-xl">Looking for a provider!</h2>
         <p className="text-center">
           We are currently looking for a provider to help with your invoice.
-          Once we find one, they'll reach out.
+          Once we find one, they&apos;ll reach out.
         </p>
         <Link href="turnover" className="w-full">
           <Button variant="outline" fullWidth className="mt-8">

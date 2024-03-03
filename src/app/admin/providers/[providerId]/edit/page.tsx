@@ -8,7 +8,7 @@ export default function ProviderEditPage({
   params: { providerId },
 }: ProviderEditParams) {
   const router = useRouter();
-  const [data] = api.provider.get.useSuspenseQuery(
+  const [{ provider, service }] = api.provider.get.useSuspenseQuery(
     { id: Number(providerId) },
     {
       useErrorBoundary: true,
@@ -24,19 +24,19 @@ export default function ProviderEditPage({
   return (
     <ProviderForm
       defaultValues={{
-        companyName: data.companyName,
-        companyNumber: data.companyNumber,
-        contactName: data.contactName,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        address: data.address,
-        maxMonthlyBudgetGBP: data.maxMonthlyBudgetGBP,
-        leadDeliveryMethod: data.leadDeliveryMethod,
-        fcaNumber: data.fcaNumber,
-        priority: data.priority,
+        companyName: provider.companyName,
+        companyNumber: provider.companyNumber,
+        contactName: provider.contactName,
+        email: provider.email,
+        phoneNumber: provider.phoneNumber,
+        address: provider.address,
+        maxMonthlyBudgetGBP: provider.maxMonthlyBudgetGBP,
+        leadDeliveryMethod: provider.leadDeliveryMethod,
+        fcaNumber: provider.fcaNumber,
+        priority: provider.priority,
       }}
       onSubmit={(values) => editProvider({ ...values, id: Number(providerId) })}
-      pageTitle={`Edit - ${data.companyName}`}
+      pageTitle={`Edit - ${provider.companyName}`}
       backUrl={`/admin/providers/${providerId}`}
       isLoading={isLoading}
     />
