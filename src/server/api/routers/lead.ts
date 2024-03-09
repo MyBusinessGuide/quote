@@ -7,10 +7,13 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import {
+  annualTurnoverGBP,
+  industry,
   lead,
   leadProviderConnection,
   providerBid,
   providers,
+  tenure_yrs,
   users,
 } from "~/server/db/schema";
 import { sendProviderEmail } from "../../../../emails/ProviderConnectedLead.email";
@@ -136,13 +139,32 @@ export const leadRouter = createTRPCRouter({
         .select({
           id: providerBid.id,
           amount_gbp: max(providerBid.amountGBP),
+          email: providers.email,
+          providerName: providers.companyName,
+          industry: industry.label,
+          tenureYrs: tenure_yrs.label,
+          annualTurnoverGBP: annualTurnoverGBP.label,
         })
         .from(providerBid)
         .innerJoin(providers, eq(providerBid.providerId, providers.id))
+        .innerJoin(
+          annualTurnoverGBP,
+          eq(annualTurnoverGBP.id, input.annualTurnoverGBPId),
+        )
+        .innerJoin(industry, eq(industry.id, input.industryId))
+        .innerJoin(tenure_yrs, eq(tenure_yrs.id, input.tenureYrsId))
         .where(eq(providerBid.leadCode, leadCode))
-        .groupBy(providerBid.id, providers.priority)
-        .orderBy(asc(providers.priority), desc(providerBid.amountGBP))
-        .limit(1);
+        .groupBy(
+          providerBid.id,
+          providers.email,
+          providers.priority,
+          industry.label,
+          tenure_yrs.label,
+          annualTurnoverGBP.label,
+          providers.companyName,
+        )
+        .orderBy(asc(providers.priority), desc(providerBid.amountGBP));
+      .limit(1);
 
       if (maxProviderBid.length === 0) {
         return { error: "No provider found" } as const;
@@ -156,14 +178,14 @@ export const leadRouter = createTRPCRouter({
       });
 
       sendProviderEmail({
-        providerEmail: input.email,
+        providerEmail: maxProviderBid[0]!.email,
         providerName: "Provider",
         fullName: input.fullName,
         quoteDate: new Date().toDateString(),
         loanAmount: "£" + insertedLead[0]!.amountGBP,
-        turnover: input.annualTurnoverGBPId.toString(),
-        tenure: input.tenureYrsId.toString(),
-        industry: input.industryId.toString(),
+        turnover: maxProviderBid[0]!.annualTurnoverGBP,
+        tenure: maxProviderBid[0]!.tenureYrs,
+        industry: maxProviderBid[0]!.industry,
         companyName: input.companyName,
         phoneNumber: input.phoneNumber,
         customerEmail: input.email,

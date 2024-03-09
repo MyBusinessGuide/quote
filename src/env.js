@@ -31,10 +31,7 @@ export const env = createEnv({
     COMPANY_API_KEY: z.string(),
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
-    SMTP_HOST: z.string(),
-    SMTP_PORT: z.string(),
-    SMTP_USER: z.string(),
-    SMTP_PASS: z.string(),
+    MAILERSEND_API_KEY: z.string(),
   },
 
   /**
@@ -44,6 +41,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_GTM: z.string(),
+    NEXT_PUBLIC_LANDING_URL: z.string(),
   },
 
   /**
@@ -59,10 +57,8 @@ export const env = createEnv({
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
     NEXT_PUBLIC_GTM: process.env.NEXT_PUBLIC_GTM,
-    SMTP_HOST: process.env.SMTP_HOST,
-    SMTP_PORT: process.env.SMTP_PORT,
-    SMTP_USER: process.env.SMTP_USER,
-    SMTP_PASS: process.env.SMTP_PASS,
+    NEXT_PUBLIC_LANDING_URL: process.env.NEXT_PUBLIC_LANDING_URL,
+    MAILERSEND_API_KEY: process.env.MAILERSEND_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

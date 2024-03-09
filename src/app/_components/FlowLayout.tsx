@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { cn } from "../_utils/cn";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { env } from "~/env";
 
 type FlowLayoutProps = {
   children: ReactNode;
@@ -37,8 +38,8 @@ export default async function FlowLayout({
         <h1 className="text-lg font-medium text-primary-800">
           Your Invoice Finance Quote
         </h1>
-        <Link
-          href="/"
+        <a
+          href={env.NEXT_PUBLIC_LANDING_URL}
           onClick={() =>
             sendGTMEvent({
               event: "invoice_finance_industry_exit",
@@ -47,7 +48,7 @@ export default async function FlowLayout({
           }
         >
           <X className="text-primary-800" />
-        </Link>
+        </a>
       </div>
       <div className={cn("w-full max-w-lg p-8", className)}>{children}</div>
       <div className="w-full flex-[2]"></div>

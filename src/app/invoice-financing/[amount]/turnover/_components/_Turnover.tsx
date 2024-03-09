@@ -25,6 +25,7 @@ export default function Turnover({ initialData, amount }: TurnoverProps) {
       refetchOnReconnect: false,
     },
   );
+
   const { data: values, setData: setValue } = useInvoiceFinancing(
     PageEnum.Turnover,
     amount,

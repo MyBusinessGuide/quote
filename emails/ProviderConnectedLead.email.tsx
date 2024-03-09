@@ -25,13 +25,14 @@ export const sendProviderEmail = ({
   ...rest
 }: ProviderConnectionEmailProps & { providerEmail: string }) => {
   console.log("Sending email to provider", providerEmail);
+  console.log(providerEmail, rest);
   sendEmail({
-    to: providerEmail,
-    subject: "[BUSINESS NAME] is looking for Invoice Financing",
+    recipientEmail: providerEmail,
+    recipientName: rest.providerName,
+    subject: `${rest.companyName} is looking for Invoice Financing`,
     html: render(
       ProviderConnectionEmail({
         ...rest,
-        loanAmount: "£" + rest.loanAmount,
       }),
     ),
   });
@@ -57,7 +58,7 @@ export default function ProviderConnectionEmail({
           <Container className="flex flex-col gap-4">
             <Container>
               <Text className="text-lg">Hi there {providerName}!</Text>
-              <Text className="text-xl font-bold">You got a lead!</Text>
+              <Text className="text-xl font-bold">You've got a lead!</Text>
             </Container>
 
             <Container className="flex flex-col gap-2">
@@ -91,11 +92,13 @@ export default function ProviderConnectionEmail({
                 Quote Date: <strong>{quoteDate}</strong>
               </Text>
               <Text key="winning-bid">
-                The lead was brought for <strong>{winningBidAmount}</strong>
+                You were the highest bidder for this lead! This lead was brought
+                for <strong>{winningBidAmount}</strong>
               </Text>
             </Container>
 
-            <Text>Thanks</Text>
+            <Text>Thanks,</Text>
+            <Text>The My Business Guide team</Text>
           </Container>
         </Section>
       </Tailwind>

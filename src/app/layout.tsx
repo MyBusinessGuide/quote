@@ -24,10 +24,7 @@ export default async function RootLayout({
 }) {
   const session = await getServerAuthSession();
   return (
-    <html
-      lang="en"
-      className={`font-sans ${inter.variable} `}
-    >
+    <html lang="en" className={`font-sans ${inter.variable} `}>
       <SessionProvider session={session}>
         <TRPCReactProvider>{children}</TRPCReactProvider>
         <GoogleTagManager gtmId={env.NEXT_PUBLIC_GTM} />

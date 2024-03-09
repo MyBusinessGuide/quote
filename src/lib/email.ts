@@ -1,30 +1,31 @@
-import nodemailer from "nodemailer";
 import { env } from "~/env";
+import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
 
 type EmailPayload = {
-  to: string;
   subject: string;
   html: string;
+  recipientName: string;
+  recipientEmail: string;
 };
 
-// Replace with your SMTP credentials
-const smtpOptions = {
-  host: env.SMTP_HOST,
-  port: parseInt(env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: env.SMTP_USER,
-    pass: env.SMTP_PASS,
-  },
-};
+const mailerSend = new MailerSend({
+  apiKey: env.MAILERSEND_API_KEY,
+});
+
+const sentFrom = new Sender(
+  "contact@mybusinessguide.co.uk",
+  "My Business Guide",
+);
 
 export const sendEmail = async (data: EmailPayload) => {
-  const transporter = nodemailer.createTransport({
-    ...smtpOptions,
-  });
+  const recipients = [new Recipient(data.recipientEmail, data.recipientName)];
 
-  return await transporter.sendMail({
-    from: process.env.SMTP_FROM_EMAIL,
-    ...data,
-  });
+  const emailParams = new EmailParams()
+    .setFrom(sentFrom)
+    .setTo(recipients)
+    .setReplyTo(sentFrom)
+    .setSubject(data.subject)
+    .setHtml(data.html);
+
+  await mailerSend.email.send(emailParams);
 };
