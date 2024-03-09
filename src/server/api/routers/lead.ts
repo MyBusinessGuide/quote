@@ -163,8 +163,8 @@ export const leadRouter = createTRPCRouter({
           annualTurnoverGBP.label,
           providers.companyName,
         )
-        .orderBy(asc(providers.priority), desc(providerBid.amountGBP));
-      .limit(1);
+        .orderBy(asc(providers.priority), desc(providerBid.amountGBP))
+        .limit(1);
 
       if (maxProviderBid.length === 0) {
         return { error: "No provider found" } as const;
