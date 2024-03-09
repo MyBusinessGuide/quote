@@ -1,6 +1,5 @@
-import { render } from "@react-email/render";
-import ProviderConnectionEmail from "emails/ProviderConnectedLead.email";
 import nodemailer from "nodemailer";
+import { env } from "~/env";
 
 type EmailPayload = {
   to: string;
@@ -10,12 +9,12 @@ type EmailPayload = {
 
 // Replace with your SMTP credentials
 const smtpOptions = {
-  host: process.env.SMTP_HOST || "smtp.mailtrap.io",
-  port: parseInt(process.env.SMTP_PORT || "2525"),
+  host: env.SMTP_HOST,
+  port: parseInt(env.SMTP_PORT),
   secure: false,
   auth: {
-    user: process.env.SMTP_USER || "user",
-    pass: process.env.SMTP_PASSWORD || "password",
+    user: env.SMTP_USER,
+    pass: env.SMTP_PASS,
   },
 };
 

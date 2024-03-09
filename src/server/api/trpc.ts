@@ -80,6 +80,8 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
+const admins = ["ivo.mujo.3@gmail.com", "ashleyjellis@ymail.com"];
+
 /**
  * Protected (authenticated) procedure
  *
@@ -92,7 +94,7 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   if (
     !ctx.session ||
     !ctx.session.user ||
-    !(ctx.session.user.email === "ivo.mujo.3@gmail.com")
+    !admins.includes(ctx.session.user.email || "")
   ) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }

@@ -16,6 +16,7 @@ import {
   leadDeliveryMethodValues,
   providerPriorityValues,
 } from "~/server/db/schema";
+import { api } from "~/trpc/react";
 
 const leadDeliveryMethodOptions = leadDeliveryMethodValues.map((method) => ({
   label: method,
@@ -52,6 +53,8 @@ export default function ProviderForm({
     defaultValues: defaultValues,
     resolver: zodResolver(insertProviderSchema),
   });
+
+  const { data: services } = api.service.getAll.useQuery();
 
   return (
     <Page backAction={{ url: backUrl }} title={pageTitle}>
@@ -214,6 +217,28 @@ export default function ProviderForm({
                   value={field.value || ""}
                   {...rest}
                   error={errors.fcaNumber?.message}
+                />
+              );
+            }}
+          />
+
+          <Controller
+            name="serviceId"
+            control={control}
+            render={({ field }) => {
+              const { ref, value, ...rest } = field;
+              return (
+                <Select
+                  label="Service"
+                  options={
+                    services?.map((service) => ({
+                      label: service.name,
+                      value: service.id.toString(),
+                    })) || []
+                  }
+                  value={value?.toString()}
+                  {...rest}
+                  error={errors.leadDeliveryMethod?.message}
                 />
               );
             }}
