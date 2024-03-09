@@ -8,29 +8,27 @@ import useInvoiceFinancing, {
   PageEnum,
 } from "~/app/_hooks/useInvoiceFinancing";
 
-type TurnoverProps = {
-  initialData: Awaited<
-    ReturnType<typeof apiServer.annualTurnoverGBP.getAll.query>
-  >;
+type IndustryProps = {
+  initialData: Awaited<ReturnType<typeof apiServer.industry.getAll.query>>;
+  amount: number;
 };
 
-export default function Turnover({ initialData }: TurnoverProps) {
+export default function Industry({ initialData, amount }: IndustryProps) {
   const router = useRouter();
-  const { data, error, isLoading } = api.annualTurnoverGBP.getAll.useQuery(
-    undefined,
-    {
-      initialData,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    },
-  );
+  const { data, error, isLoading } = api.industry.getAll.useQuery(undefined, {
+    initialData,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
   const { data: values, setData: setValue } = useInvoiceFinancing(
-    PageEnum.Turnover,
+    PageEnum.Industry,
+    amount,
   );
 
   const onValueChange = (value: string) => {
-    setValue("turnoverId", Number(value));
-    router.push("/invoice-financing/industry");
+    setValue("industryId", Number(value));
+    router.push(`/invoice-financing/${amount}/company`);
   };
 
   const items = data?.map((item) => ({
@@ -45,11 +43,11 @@ export default function Turnover({ initialData }: TurnoverProps) {
         onValueChange={(value) => {
           onValueChange(value);
           sendGTMEvent({
-            event: "invoice_finance_turnover",
-            value: "invoice_finance_turnover",
+            event: "invoice_finance_industry",
+            value: "invoice_finance_industry",
           });
         }}
-        value={values.turnoverId?.toString()}
+        value={values.industryId?.toString()}
       />
     );
 

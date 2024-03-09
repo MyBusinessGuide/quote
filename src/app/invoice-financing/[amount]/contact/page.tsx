@@ -25,8 +25,15 @@ const inputsSchema = z.object({
 
 type Inputs = z.infer<typeof inputsSchema>;
 
-export default function Contact() {
-  const { data: values, clear } = useInvoiceFinancing(PageEnum.Contact);
+export default function Contact({
+  params: { amount },
+}: {
+  params: { amount: string };
+}) {
+  const { data: values, clear } = useInvoiceFinancing(
+    PageEnum.Contact,
+    parseInt(amount),
+  );
   const navigate = useRouter();
 
   const {
@@ -77,6 +84,7 @@ export default function Contact() {
       companyStatus: values.companyStatus,
       companyType: values.companyType,
       postalCode: values.postalCode,
+      amountGBP: parseInt(amount),
     });
   };
 

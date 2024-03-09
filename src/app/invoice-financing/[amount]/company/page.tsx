@@ -11,11 +11,11 @@ import useInvoiceFinancing, {
   PageEnum,
 } from "~/app/_hooks/useInvoiceFinancing";
 
-export default function Company() {
+export default function Company({ amount }: { amount: number }) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
   const { data: invoiceFinancingState, setData: setInvoiceFinancingState } =
-    useInvoiceFinancing(PageEnum.Company);
+    useInvoiceFinancing(PageEnum.Company, amount);
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);

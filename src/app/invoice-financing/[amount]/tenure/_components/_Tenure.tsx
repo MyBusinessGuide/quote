@@ -10,9 +10,10 @@ import useInvoiceFinancing, {
 
 type TenureProps = {
   initialData: Awaited<ReturnType<typeof apiServer.tenure.getAll.query>>;
+  amount: number;
 };
 
-export default function Tenure({ initialData }: TenureProps) {
+export default function Tenure({ initialData, amount }: TenureProps) {
   const router = useRouter();
   const { data, error, isLoading } = api.tenure.getAll.useQuery(undefined, {
     initialData,
@@ -21,6 +22,7 @@ export default function Tenure({ initialData }: TenureProps) {
   });
   const { data: values, setData: setValue } = useInvoiceFinancing(
     PageEnum.Tenure,
+    amount,
   );
 
   const onValueChange = (value: string) => {
@@ -29,7 +31,7 @@ export default function Tenure({ initialData }: TenureProps) {
       value: "invoice_finance_not_there_tenure",
     });
     setValue("tenureId", Number(value));
-    router.push("/invoice-financing/contact");
+    router.push(`/invoice-financing/${amount}/contact`);
   };
 
   const items = data?.map((item) => ({

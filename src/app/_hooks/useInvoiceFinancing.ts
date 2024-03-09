@@ -23,7 +23,10 @@ const requirements: Requirements = {
   [PageEnum.Contact]: ["turnoverId", "industryId", "companyName", "tenureId"],
 };
 
-export default function useInvoiceFinancing(currentPage: PageEnum) {
+export default function useInvoiceFinancing(
+  currentPage: PageEnum,
+  prevAmount: number,
+) {
   const state = useInvoiceFinancingState();
   const router = useRouter();
 
@@ -35,7 +38,7 @@ export default function useInvoiceFinancing(currentPage: PageEnum) {
 
     if (isMissingRequiredFields) {
       state.clear();
-      router.push("/invoice-financing/turnover");
+      router.push(`/invoice-financing/${prevAmount}/turnover`);
     }
   }, []);
 

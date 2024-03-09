@@ -70,6 +70,7 @@ export const leadRouter = createTRPCRouter({
         postalCode: z.string().optional(),
         companyType: z.string().optional(),
         companyStatus: z.string().optional(),
+        amountGBP: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -123,6 +124,7 @@ export const leadRouter = createTRPCRouter({
           companyStatus: input.companyStatus,
           leadCode: leadCode,
           serviceId: 1,
+          amountGBP: input.amountGBP,
         })
         .returning();
 
