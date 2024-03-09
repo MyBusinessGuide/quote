@@ -43,9 +43,9 @@ export default function Company({
         </p>
       </div>
       {invoiceFinancingState.companyNumber ? (
-        <OfficerSelect />
+        <OfficerSelect amount={parseInt(amount)} />
       ) : (
-        <CompanySearch query={debouncedQuery} />
+        <CompanySearch amount={parseInt(amount)} query={debouncedQuery} />
       )}
       <Link href="contact" className="w-full">
         <Button

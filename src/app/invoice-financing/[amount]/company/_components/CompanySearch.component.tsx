@@ -12,11 +12,12 @@ import useInvoiceFinancing, {
 
 type CompanySearchProps = {
   query: string;
+  amount: number;
 };
 
-export default function CompanySearch({ query }: CompanySearchProps) {
+export default function CompanySearch({ query, amount }: CompanySearchProps) {
   const { data: invoiceFinancingState, setData: setInvoiceFinancingState } =
-    useInvoiceFinancing(PageEnum.Company);
+    useInvoiceFinancing(PageEnum.Company, amount);
 
   const navigate = useRouter();
 

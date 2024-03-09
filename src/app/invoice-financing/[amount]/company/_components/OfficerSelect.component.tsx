@@ -14,9 +14,9 @@ import useInvoiceFinancing, {
 } from "~/app/_hooks/useInvoiceFinancing";
 import { api } from "~/trpc/react";
 
-export default function OfficerSelect() {
+export default function OfficerSelect({ amount }: { amount: number }) {
   const { data: invoiceFinancingState, setData: setInvoiceFinancingState } =
-    useInvoiceFinancing(PageEnum.Company);
+    useInvoiceFinancing(PageEnum.Company, amount);
   const [nameAvailable, setNameAvailable] = useState(true);
   const [selectedOfficerId, setSelectedOfficerId] = useState<
     string | undefined
