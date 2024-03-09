@@ -1,6 +1,5 @@
 "use client";
 import { ChangeEvent, useState } from "react";
-import FlowLayout from "~/app/_components/FlowLayout";
 import Input from "~/app/_components/Input.component";
 import { useDebounce } from "~/app/_hooks/useDebounce";
 import CompanySearch from "./_components/CompanySearch.component";
@@ -11,11 +10,15 @@ import useInvoiceFinancing, {
   PageEnum,
 } from "~/app/_hooks/useInvoiceFinancing";
 
-export default function Company({ amount }: { amount: number }) {
+export default function Company({
+  params: { amount },
+}: {
+  params: { amount: string };
+}) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 500);
   const { data: invoiceFinancingState, setData: setInvoiceFinancingState } =
-    useInvoiceFinancing(PageEnum.Company, amount);
+    useInvoiceFinancing(PageEnum.Company, parseInt(amount));
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
