@@ -266,7 +266,8 @@ export const leadRouter = createTRPCRouter({
       .leftJoin(
         leadProviderConnection,
         eq(leadProviderConnection.leadId, lead.id),
-      );
+      )
+      .orderBy(desc(lead.dateCreated));
   }),
   get: protectedProcedure
     .input(z.object({ id: z.number() }))
