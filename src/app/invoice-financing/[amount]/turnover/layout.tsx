@@ -6,7 +6,7 @@ export default function TurnoverLayout({
   children: React.ReactNode;
 }) {
   return (
-    <FlowLayout>
+    <FlowLayout currentPage="turnover">
       <div className="w-full">
         <h2 className="mb-8 text-center text-lg text-primary">
           What&apos;s your annual turnover?

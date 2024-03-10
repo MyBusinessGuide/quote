@@ -6,7 +6,7 @@ import FlowLayout from "~/app/_components/FlowLayout";
 
 export default async function Error() {
   return (
-    <FlowLayout backUrl="">
+    <FlowLayout currentPage="error">
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <div className="border- flex items-center justify-center rounded-full border-2 border-red-700 p-2 text-red-700">
           <X className="stroke-2" />

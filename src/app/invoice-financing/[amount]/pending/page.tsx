@@ -5,7 +5,7 @@ import { env } from "~/env";
 
 export default async function Pending() {
   return (
-    <FlowLayout>
+    <FlowLayout currentPage="pending">
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <h2 className="text-xl">Looking for a provider!</h2>
         <p className="text-center">

@@ -10,12 +10,14 @@ type FlowLayoutProps = {
   children: ReactNode;
   backUrl?: string;
   className?: string;
+  currentPage: string;
 };
 
 export default async function FlowLayout({
   children,
   backUrl,
   className,
+  currentPage,
 }: FlowLayoutProps) {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center gap-2 md:p-6">
@@ -25,8 +27,8 @@ export default async function FlowLayout({
             href={backUrl}
             onClick={() =>
               sendGTMEvent({
-                event: "invoice_finance_industry_back",
-                value: "invoice_finance_industry_back",
+                event: `invoice_finance_${currentPage}_back`,
+                value: `invoice_finance_${currentPage}_back`,
               })
             }
           >
@@ -42,8 +44,8 @@ export default async function FlowLayout({
           href={env.NEXT_PUBLIC_LANDING_URL}
           onClick={() =>
             sendGTMEvent({
-              event: "invoice_finance_industry_exit",
-              value: "invoice_finance_industry_exit",
+              event: `invoice_finance_${currentPage}_exit`,
+              value: `invoice_finance_${currentPage}_exit`,
             })
           }
         >

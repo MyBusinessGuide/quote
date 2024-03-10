@@ -6,7 +6,7 @@ export default function TenureLayout({
   children: React.ReactNode;
 }) {
   return (
-    <FlowLayout backUrl="company">
+    <FlowLayout currentPage="tenure" backUrl="company">
       <div className="w-full">
         <h2 className="mb-8 text-center text-lg text-primary">
           How long have you been trading?

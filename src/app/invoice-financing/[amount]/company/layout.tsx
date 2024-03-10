@@ -8,7 +8,11 @@ export default function CompanyLayout({
   params: { amount: string };
 }) {
   return (
-    <FlowLayout backUrl="industry" className="flex min-h-[50vh] flex-col gap-2">
+    <FlowLayout
+      backUrl="industry"
+      currentPage="company"
+      className="flex min-h-[50vh] flex-col gap-2"
+    >
       {children}
     </FlowLayout>
   );

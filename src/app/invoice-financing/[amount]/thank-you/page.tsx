@@ -7,7 +7,7 @@ import { env } from "~/env";
 
 export default async function ThankYou() {
   return (
-    <FlowLayout>
+    <FlowLayout currentPage="thank_you">
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <div className="flex items-center justify-center rounded-full border-2 border-primary p-2 text-primary">
           <Check className="stroke-2" />

@@ -5,5 +5,9 @@ export default function ContactLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <FlowLayout backUrl="company">{children}</FlowLayout>;
+  return (
+    <FlowLayout currentPage="contact" backUrl="company">
+      {children}
+    </FlowLayout>
+  );
 }

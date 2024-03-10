@@ -9,6 +9,7 @@ import Link from "next/link";
 import useInvoiceFinancing, {
   PageEnum,
 } from "~/app/_hooks/useInvoiceFinancing";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export default function Company({
   params: { amount },
@@ -35,6 +36,12 @@ export default function Company({
         value={query}
         onChange={onSearch}
         className="mb-6"
+        onFocus={() => {
+          sendGTMEvent({
+            event: "invoice_finance_company_name",
+            value: "invoice_finance_company_name",
+          });
+        }}
       />
       <div>
         <h3 className="mb-1 font-medium">Select your company from below:</h3>
