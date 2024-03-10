@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { asc, desc, eq, max } from "drizzle-orm";
+import { asc, desc, eq, max, and, ne } from "drizzle-orm";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -153,7 +153,13 @@ export const leadRouter = createTRPCRouter({
         )
         .innerJoin(industry, eq(industry.id, input.industryId))
         .innerJoin(tenure_yrs, eq(tenure_yrs.id, input.tenureYrsId))
-        .where(eq(providerBid.leadCode, leadCode))
+        .where(
+          and(
+            eq(providerBid.leadCode, leadCode),
+            eq(providers.archived, false),
+            ne(providerBid.amountGBP, 0),
+          ),
+        )
         .groupBy(
           providerBid.id,
           providers.email,
@@ -179,7 +185,7 @@ export const leadRouter = createTRPCRouter({
 
       sendProviderEmail({
         providerEmail: maxProviderBid[0]!.email,
-        providerName: "Provider",
+        providerName: maxProviderBid[0]!.providerName,
         fullName: input.fullName,
         quoteDate: new Date().toDateString(),
         loanAmount: "£" + insertedLead[0]!.amountGBP,
@@ -227,6 +233,12 @@ export const leadRouter = createTRPCRouter({
           .select()
           .from(lead)
           .innerJoin(users, eq(lead.userId, users.id))
+          .leftJoin(
+            annualTurnoverGBP,
+            eq(lead.annualTurnoverGBPId, annualTurnoverGBP.id),
+          )
+          .leftJoin(industry, eq(lead.industryId, industry.id))
+          .leftJoin(tenure_yrs, eq(lead.tenureYrsId, tenure_yrs.id))
           .where(eq(lead.id, input.leadId))
           .limit(1)
       )[0]!;
@@ -237,10 +249,9 @@ export const leadRouter = createTRPCRouter({
         fullName: insertedLead.user.name || "lead_name",
         quoteDate: new Date().toDateString(),
         loanAmount: "£" + insertedLead.lead.amountGBP,
-        turnover:
-          insertedLead.lead.annualTurnoverGBPId?.toString() || "turnover",
-        tenure: insertedLead.lead.tenureYrsId?.toString() || "tenure",
-        industry: insertedLead.lead.industryId?.toString() || "industry",
+        turnover: insertedLead.annual_turnover_gbp?.label || "turnover",
+        tenure: insertedLead.tenure_yrs?.label || "tenure",
+        industry: insertedLead.industry?.label || "industry",
         companyName: insertedLead.lead.companyName || "company_name",
         phoneNumber: insertedLead.user.phoneNumber || "phone_number",
         customerEmail: insertedLead.user.email || "email",

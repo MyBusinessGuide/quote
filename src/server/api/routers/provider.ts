@@ -88,7 +88,7 @@ export const providerRouter = createTRPCRouter({
             .select({
               id: lead.id,
               companyName: lead.companyName,
-              amountGBP: lead.amountGBP,
+              amountGBP: leadProviderConnection.amountGBP,
             })
             .from(leadProviderConnection)
             .innerJoin(lead, eq(lead.id, leadProviderConnection.leadId))

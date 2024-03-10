@@ -1,9 +1,11 @@
 import {
+  boolean,
   index,
   integer,
   pgEnum,
   pgTableCreator,
   primaryKey,
+  real,
   serial,
   text,
   timestamp,
@@ -142,13 +144,14 @@ export const providers = createTable("provider", {
     .notNull()
     .references(() => service.id)
     .default(1),
-  // - payment_terms
+  archived: boolean("archived").notNull().default(false),
 });
 export const insertProviderSchema = createInsertSchema(providers, {
   maxMonthlyBudgetGBP: z.coerce.number().min(0),
   email: z.string().email(),
   companyName: z.string().min(1),
   contactName: z.string().min(1),
+  archived: z.boolean(),
 });
 
 export const providerBid = createTable(
@@ -158,7 +161,7 @@ export const providerBid = createTable(
     providerId: integer("provider_id")
       .notNull()
       .references(() => providers.id),
-    amountGBP: integer("amount_gbp").notNull(),
+    amountGBP: real("amount_gbp").notNull(),
     leadCode: leadCode("lead_code").notNull(),
   },
   (t) => ({
@@ -177,12 +180,12 @@ export const leadProviderConnection = createTable(
     leadId: integer("lead_id")
       .notNull()
       .unique()
-      .references(() => lead.id),
+      .references(() => lead.id, { onDelete: "cascade" }),
     providerBidId: integer("provider_bid_id")
       .notNull()
       .references(() => providerBid.id),
     leadCode: leadCode("lead_code").notNull(),
-    amountGBP: integer("amount_gbp").notNull(),
+    amountGBP: real("amount_gbp").notNull(),
     dateCreated: timestamp("date_created").defaultNow(),
   },
   (t) => ({

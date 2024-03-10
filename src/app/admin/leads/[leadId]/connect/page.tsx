@@ -9,7 +9,7 @@ import {
   Select,
 } from "@shopify/polaris";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { api } from "~/trpc/react";

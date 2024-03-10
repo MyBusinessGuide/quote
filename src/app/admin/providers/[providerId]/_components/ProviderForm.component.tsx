@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
+  Checkbox,
   Form,
   FormLayout,
   Page,
@@ -48,7 +49,10 @@ export default function ProviderForm({
   const {
     handleSubmit,
     formState: { errors },
+    getValues,
+    setValue,
     control,
+    watch,
   } = useForm<ProviderEditValues>({
     defaultValues: defaultValues,
     resolver: zodResolver(insertProviderSchema),
@@ -242,6 +246,13 @@ export default function ProviderForm({
                 />
               );
             }}
+          />
+
+          <Checkbox
+            label="Archived"
+            checked={getValues("archived")}
+            onChange={(newChecked) => setValue("archived", newChecked)}
+            error={errors.archived?.message}
           />
         </FormLayout>
         <PageActions

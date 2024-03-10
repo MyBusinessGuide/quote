@@ -124,7 +124,7 @@ export default function Contact({
       <p className="text-center">
         By filling out this form you agree to our{" "}
         <a
-          href="http://thebusinessguide.co.uk/customer-terms"
+          href="http://mybusinessguide.co.uk/customer-terms"
           target="_blank"
           onClick={() =>
             sendGTMEvent({
@@ -138,7 +138,7 @@ export default function Contact({
         </a>{" "}
         and our{" "}
         <a
-          href="http://thebusinessguide.co.uk/privacy-policy"
+          href="http://mybusinessguide.co.uk/privacy-policy"
           target="_blank"
           onClick={() =>
             sendGTMEvent({

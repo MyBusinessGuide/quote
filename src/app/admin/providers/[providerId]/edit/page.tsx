@@ -34,6 +34,7 @@ export default function ProviderEditPage({
         leadDeliveryMethod: provider.leadDeliveryMethod,
         fcaNumber: provider.fcaNumber,
         priority: provider.priority,
+        archived: provider.archived,
       }}
       onSubmit={(values) => editProvider({ ...values, id: Number(providerId) })}
       pageTitle={`Edit - ${provider.companyName}`}

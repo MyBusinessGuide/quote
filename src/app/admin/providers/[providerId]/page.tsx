@@ -12,6 +12,7 @@ import {
   Button,
   ButtonGroup,
   InlineGrid,
+  Badge,
 } from "@shopify/polaris";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -43,6 +44,9 @@ export default function Provider({ params: { providerId } }: ProviderParams) {
     <Page
       backAction={{ content: "Back", url: "/admin/providers" }}
       title={`Provider - ${provider.companyName}`}
+      titleMetadata={
+        provider.archived && <Badge tone="critical">Archived</Badge>
+      }
       secondaryActions={[
         { content: "Edit", url: `/admin/providers/${providerId}/edit` },
         {

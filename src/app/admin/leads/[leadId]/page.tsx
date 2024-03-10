@@ -92,7 +92,7 @@ export default function Provider({ params: { leadId } }: ProviderParams) {
       <Modal
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        title="Are you sure you want to delete this provider?"
+        title="Are you sure you want to delete this lead?"
         primaryAction={{
           content: "Delete",
           destructive: true,
@@ -109,7 +109,10 @@ export default function Provider({ params: { leadId } }: ProviderParams) {
         ]}
       >
         <Modal.Section>
-          <p>This action cannot be undone.</p>
+          <p>
+            This action cannot be undone. This action will also delete all
+            provider lead connections from this lead.
+          </p>
         </Modal.Section>
       </Modal>
 

@@ -55,6 +55,7 @@ export default function BidForm({
                   label="Bid amount (GBP)"
                   prefix="£"
                   type="number"
+                  step={0.01}
                   value={value.toString()}
                   {...rest}
                   error={errors.amountGBP?.message}
