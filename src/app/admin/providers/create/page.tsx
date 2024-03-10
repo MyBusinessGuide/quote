@@ -27,6 +27,7 @@ export default function ProviderCreatePage() {
         maxMonthlyBudgetGBP: 0,
         leadDeliveryMethod: "email",
         fcaNumber: "",
+        archived: false,
       }}
       onSubmit={(values) => createProvider(values)}
       pageTitle="Create Provider"

@@ -49,10 +49,8 @@ export default function ProviderForm({
   const {
     handleSubmit,
     formState: { errors },
-    getValues,
     setValue,
     control,
-    watch,
   } = useForm<ProviderEditValues>({
     defaultValues: defaultValues,
     resolver: zodResolver(insertProviderSchema),
@@ -248,11 +246,20 @@ export default function ProviderForm({
             }}
           />
 
-          <Checkbox
-            label="Archived"
-            checked={getValues("archived")}
-            onChange={(newChecked) => setValue("archived", newChecked)}
-            error={errors.archived?.message}
+          <Controller
+            name="archived"
+            control={control}
+            render={({ field }) => {
+              const { ref, value, ...rest } = field;
+              return (
+                <Checkbox
+                  label="Archived"
+                  checked={value}
+                  onChange={(newChecked) => setValue("archived", newChecked)}
+                  error={errors.archived?.message}
+                />
+              );
+            }}
           />
         </FormLayout>
         <PageActions
