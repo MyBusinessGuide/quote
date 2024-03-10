@@ -251,7 +251,11 @@ export const leadRouter = createTRPCRouter({
     return await ctx.db
       .select()
       .from(lead)
-      .innerJoin(users, eq(lead.userId, users.id));
+      .innerJoin(users, eq(lead.userId, users.id))
+      .leftJoin(
+        leadProviderConnection,
+        eq(leadProviderConnection.leadId, lead.id),
+      );
   }),
   get: protectedProcedure
     .input(z.object({ id: z.number() }))
@@ -276,6 +280,9 @@ export const leadRouter = createTRPCRouter({
           },
           provider: {
             id: providers.id,
+          },
+          providerBid: {
+            amountGBP: providerBid.amountGBP,
           },
         })
         .from(lead)

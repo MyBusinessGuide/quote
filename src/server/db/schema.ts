@@ -88,6 +88,7 @@ export const lead = createTable("lead", {
   postalCode: varchar("postal_code", { length: 256 }),
   companyType: varchar("company_type", { length: 256 }),
   leadCode: leadCode("lead_code").notNull(),
+  dateCreated: timestamp("date_created").defaultNow(),
 });
 
 export const users = createTable("user", {

@@ -37,6 +37,11 @@ export default function Provider({ params: { leadId } }: ProviderParams) {
     <Page
       backAction={{ content: "Back", url: "/admin/leads" }}
       title={`Lead - ${data.user.name} from ${data.lead.companyName} - ${data.lead.leadCode}`}
+      subtitle={
+        data.providerBid?.amountGBP
+          ? `Loan amount - £${data.providerBid.amountGBP}`
+          : "Not connected"
+      }
       primaryAction={{
         content: data.provider ? "View provider" : "Connect with provider",
         url: data.provider

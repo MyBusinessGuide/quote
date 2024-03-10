@@ -1,7 +1,10 @@
 "use client";
 
 import {
+  Badge,
+  BlockStack,
   Card,
+  InlineGrid,
   Layout,
   Page,
   ResourceItem,
@@ -23,16 +26,33 @@ export default function Leads() {
               items={data}
               renderItem={(item) => {
                 const {
-                  lead: { id, companyName, leadCode },
+                  lead: { id, companyName, leadCode, dateCreated },
                   user: { name },
+                  lead_provider_connection: isConnected,
                 } = item;
 
                 return (
                   <ResourceItem id={id.toString()} url={`/admin/leads/${id}`}>
-                    <Text variant="bodyMd" fontWeight="bold" as="h3">
-                      {companyName} - {leadCode}
-                    </Text>
-                    <div>{name}</div>
+                    <InlineGrid columns="1fr auto">
+                      <div>
+                        <Text variant="bodyMd" fontWeight="bold" as="h3">
+                          {companyName} - {leadCode}
+                        </Text>
+                        <div>{name}</div>
+                      </div>
+                      <BlockStack align="space-between">
+                        {!!isConnected ? (
+                          <Badge tone="success">Connected</Badge>
+                        ) : (
+                          <Badge tone="critical">Not connected</Badge>
+                        )}
+                        {dateCreated && (
+                          <Text variant="bodySm" as={"p"}>
+                            {dateCreated.toDateString()}
+                          </Text>
+                        )}
+                      </BlockStack>
+                    </InlineGrid>
                   </ResourceItem>
                 );
               }}
