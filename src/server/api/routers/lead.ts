@@ -260,9 +260,9 @@ export const leadRouter = createTRPCRouter({
         .select({
           lead: {
             companyName: lead.companyName,
-            annualTurnoverGBPId: lead.annualTurnoverGBPId,
-            industryId: lead.industryId,
-            tenureYrsId: lead.tenureYrsId,
+            annualTurnoverGBP: annualTurnoverGBP.label,
+            industry: industry.label,
+            tenureYrs: tenure_yrs.label,
             address: lead.address,
             postalCode: lead.postalCode,
             companyType: lead.companyType,
@@ -289,6 +289,12 @@ export const leadRouter = createTRPCRouter({
           eq(providerBid.id, leadProviderConnection.providerBidId),
         )
         .leftJoin(providers, eq(providers.id, providerBid.providerId))
+        .leftJoin(tenure_yrs, eq(tenure_yrs.id, lead.tenureYrsId))
+        .leftJoin(industry, eq(industry.id, lead.industryId))
+        .leftJoin(
+          annualTurnoverGBP,
+          eq(annualTurnoverGBP.id, lead.annualTurnoverGBPId),
+        )
         .where(eq(lead.id, input.id))
         .limit(1);
 
