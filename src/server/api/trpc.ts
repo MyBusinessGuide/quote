@@ -80,7 +80,7 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-const admins = ["ivo.mujo.3@gmail.com", "ashleyjellis@ymail.com"];
+const admins = ["ivo.mujo.3@gmail.com", "ashleyjellis@ymail.com", "sam.griffin31@ymail.com"];
 
 /**
  * Protected (authenticated) procedure

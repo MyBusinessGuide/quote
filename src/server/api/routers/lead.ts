@@ -284,6 +284,7 @@ export const leadRouter = createTRPCRouter({
             companyType: lead.companyType,
             companyStatus: lead.companyStatus,
             leadCode: lead.leadCode,
+            amountGBP: lead.amountGBP,
           },
           user: {
             name: users.name,
